@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="lib" path="C:/tools/Android/GoogleAdMobAdsSdkAndroid-4.1.1/GoogleAdMobAdsSdk-4.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/tools/libs/jtransforms-2.4.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/C:/tools/libs/jtransforms-2.4-doc.zip!/JTransforms/doc"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

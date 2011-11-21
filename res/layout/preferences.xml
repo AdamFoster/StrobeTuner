@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+ 
+<RelativeLayout 
+ 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+	android:orientation="vertical"
+	android:id="@+id/relativeLayout1" 
+ 	android:layout_width="fill_parent" android:layout_height="fill_parent">
+ 	
+		<!-- Evil Ads -->
+	<com.google.ads.AdView android:id="@+id/adView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		ads:adUnitId="a14e5c6a72ea38d"
+		ads:adSize="BANNER"
+		ads:loadAdOnCreate="false" 
+		android:layout_alignParentBottom="true" />
+
+    <!-- Buttons -->
+    <Button android:id="@+id/prefReset" 
+    	android:layout_height="wrap_content" android:layout_width="80dp" 
+    	android:text="@string/reset" android:onClick="onClick" 
+    	android:layout_above="@id/adView" android:layout_alignParentRight="true" android:layout_marginBottom="10dp"/>
+    <Button android:id="@+id/prefCancel" 
+    	android:layout_height="wrap_content" android:layout_width="80dp" 
+    	android:text="@string/cancel" android:onClick="onClick" 
+    	android:layout_alignTop="@id/prefReset" android:layout_toLeftOf="@id/prefReset" />
+    <Button android:id="@+id/prefOk" 
+      	android:layout_height="wrap_content" android:layout_width="80dp" 
+      	android:text="@string/ok" android:onClick="onClick" 
+      	android:layout_alignTop="@id/prefCancel" android:layout_toLeftOf="@id/prefCancel"/>
+    
+    <LinearLayout android:id="@+id/layoutLine"
+    	android:layout_height="1dp" android:layout_width="fill_parent"
+    	android:background="@color/White"
+    	android:orientation="horizontal">
+    </LinearLayout>
+ 	
+ 	<ScrollView android:id="@+id/scrollView" 
+ 			android:layout_height="wrap_content" android:layout_width="fill_parent"
+ 			android:layout_above="@id/prefReset" android:layout_alignParentTop="true"
+ 			android:scrollbarAlwaysDrawVerticalTrack="true"
+ 			
+ 			>
+ 		<RelativeLayout 
+			android:orientation="vertical"
+			android:id="@+id/relativeLayout2" 
+		 	android:layout_width="fill_parent" android:layout_height="fill_parent">
+		
+		 	
+		    <TextView android:id="@+id/prefHeaderText" 
+		  		android:layout_height="wrap_content" android:layout_width="wrap_content" 
+		  		android:text="Preferences" 
+		  		android:textAppearance="?android:attr/textAppearanceLarge" />
+		  
+		  	<!-- A4 Frequency -->
+		 	<TextView android:id="@+id/prefFreqTextView" 
+		 		android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginTop="20dp"
+		 		android:text="A4 Frequency" 
+		 		android:paddingTop="4dp" android:paddingBottom="8dp"
+		 		android:layout_below="@id/prefHeaderText" android:layout_alignParentLeft="true"
+		 		android:onClick="onClick" android:clickable="true"/>
+		 	<TextView android:id="@+id/textViewHz" 
+		     	android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_margin="5dp"
+		     	android:text="Hz" android:textAppearance="?android:attr/textAppearanceMedium" 
+		     	android:layout_alignParentRight="true" android:layout_alignTop="@id/prefFreqTextView"/>
+		 	<EditText android:id="@+id/prefA4value" android:inputType="numberDecimal" android:gravity="right"
+		 		android:layout_height="wrap_content" android:layout_width="120dp" 
+		 		android:layout_toLeftOf="@id/textViewHz" android:layout_alignTop="@id/prefFreqTextView"/>
+		 		
+		 	<!-- Aperture size -->
+		 	<TextView android:id="@+id/prefApatureTextView" 
+		 		android:text="Mask Aperture Size" 
+		 		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		 		android:layout_marginTop="20dp"
+		 		android:paddingTop="4dp" android:paddingBottom="8dp"
+		 		android:layout_below="@id/prefA4value" android:layout_alignParentLeft="true"
+		 		android:onClick="onClick" android:clickable="true"/>
+		     <TextView android:id="@+id/textViewPC" 
+		     	android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_margin="5dp"
+		     	android:text="%" android:textAppearance="?android:attr/textAppearanceMedium" 
+		     	android:layout_alignParentRight="true" android:layout_alignTop="@id/prefApatureTextView"/>
+			<EditText android:id="@+id/prefMaskValue" android:inputType="number" android:gravity="right"
+		      	android:layout_height="wrap_content" android:layout_width="wrap_content" 
+		      	android:layout_alignTop="@id/prefApatureTextView" android:layout_alignRight="@id/prefA4value"
+		      	android:layout_alignLeft="@id/prefA4value"/>
+		     	
+		     <!-- Noise threshold -->
+		     <TextView android:id="@+id/prefNoiseTextView" 
+		     	android:layout_width="wrap_content" android:layout_height="wrap_content" 
+		     	android:text="Noise Threshold" 
+		     	android:layout_marginTop="20dp"  
+		 		android:paddingTop="4dp" android:paddingBottom="8dp"
+		   	  	android:layout_below="@id/prefMaskValue" android:layout_alignParentLeft="true"
+		   	  	android:onClick="onClick" android:clickable="true"/>
+		     <EditText android:id="@+id/prefNoiseValue" 
+		     	android:inputType="number" android:gravity="right"
+		     	android:layout_height="wrap_content" android:layout_width="wrap_content" 
+		     	android:layout_alignTop="@id/prefNoiseTextView" 
+		     	android:layout_alignLeft="@id/prefA4value" android:layout_alignRight="@id/prefA4value" />
+		
+		     <!-- Calibration Factor -->
+		     <TextView android:id="@+id/prefCalibrationTextView" 
+		     	android:layout_width="wrap_content" android:layout_height="wrap_content" 
+		     	android:text="Calibration Factor" 
+		     	android:layout_marginTop="20dp"
+		 		android:paddingTop="4dp" android:paddingBottom="8dp"
+		   	  	android:layout_below="@id/prefNoiseValue" android:layout_alignParentLeft="true"
+		   	  	android:onClick="onClick" android:clickable="true"/>
+		     <EditText android:id="@+id/prefCalibrationValue" 
+		     	android:inputType="numberSigned" android:gravity="right"
+		     	android:layout_height="wrap_content" android:layout_width="wrap_content" 
+		     	android:layout_alignTop="@id/prefCalibrationTextView" 
+		     	android:layout_alignLeft="@id/prefA4value" android:layout_alignRight="@id/prefA4value" />
+		
+			 <!-- Check boxes -->
+		     <TextView android:id="@+id/prefSaveNoteTextView" 
+		     	android:layout_width="wrap_content" android:layout_height="wrap_content" 
+		     	android:text="Save Note" 
+		     	android:layout_marginTop="20dp"
+		   	  	android:layout_below="@id/prefCalibrationValue" android:layout_alignParentLeft="true"
+		   	  	android:onClick="onClick" android:clickable="true"/>
+		    <CheckBox android:id="@+id/prefSaveNoteBox" 
+		    	android:text="" 
+		    	android:layout_width="wrap_content" 
+		    	android:layout_height="wrap_content" 
+		    	android:layout_alignTop="@id/prefSaveNoteTextView" android:layout_alignLeft="@+id/prefA4value" />
+		
+		     <TextView android:id="@+id/prefSaveOctaveTextView" 
+		     	android:layout_width="wrap_content" android:layout_height="wrap_content" 
+		     	android:text="Save Octave" 
+		     	android:layout_marginTop="20dp"
+		   	  	android:layout_below="@id/prefSaveNoteBox" android:layout_alignParentLeft="true"
+		   	  	android:onClick="onClick" android:clickable="true"/>
+		    <CheckBox android:id="@+id/prefSaveOctaveBox" 
+		    	android:text="" 
+		    	android:layout_width="wrap_content" 
+		    	android:layout_height="wrap_content" 
+		    	android:layout_alignTop="@id/prefSaveOctaveTextView" android:layout_alignLeft="@+id/prefA4value" />
+		</RelativeLayout>
+		
+ 	</ScrollView>
+		
+</RelativeLayout>
+  
