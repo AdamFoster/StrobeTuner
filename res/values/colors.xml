@@ -2,7 +2,7 @@
 <resources>
     <color name="Background">#000000</color>
     <color name="Circle">#777777</color>
-    <color name="Light">#FF0000</color>
+    <color name="Bright">#FF0000</color>
     <color name="Medium">#880000</color>
     <color name="Dark">#000000</color>
     <color name="CentreText">#AAAAAA</color>

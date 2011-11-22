@@ -87,7 +87,7 @@ public class Recorder
     
     private Paint mPaintBackground;
     private Paint mPaintCircle;
-    private Paint mPaintLight;
+    private Paint mPaintBright;
     private Paint mPaintMedium;
     private Paint mPaintDark;
     private Paint mPaintText;
@@ -135,9 +135,9 @@ public class Recorder
         mPaintCircle = new Paint();
         mPaintCircle.setStyle(Style.FILL); 
         mPaintCircle.setColor(context.getResources().getColor(R.color.Circle));
-        mPaintLight = new Paint();
-        mPaintLight.setStyle(Style.FILL); 
-        mPaintLight.setColor(context.getResources().getColor(R.color.Light));
+        mPaintBright = new Paint();
+        mPaintBright.setStyle(Style.FILL); 
+        mPaintBright.setColor(context.getResources().getColor(R.color.Bright));
         mPaintMedium = new Paint();
         mPaintMedium.setStyle(Style.FILL); 
         mPaintMedium.setColor(context.getResources().getColor(R.color.Medium));
@@ -722,9 +722,9 @@ public class Recorder
 				if (litBins > 0)
 				{
 					canvas.drawArc(new RectF(cx-tempRadius, cy-tempRadius, cx+tempRadius, cy+tempRadius), 
-							-startBin*sweepAngle, -litBins*sweepAngle, true, mPaintLight);
+							-startBin*sweepAngle, -litBins*sweepAngle, true, mPaintBright);
 					canvas.drawArc(new RectF(cx-tempRadius, cy-tempRadius, cx+tempRadius, cy+tempRadius), 
-							-startBin*sweepAngle + 180, -litBins*sweepAngle, true, mPaintLight);
+							-startBin*sweepAngle + 180, -litBins*sweepAngle, true, mPaintBright);
 				}
 				// */
 			}

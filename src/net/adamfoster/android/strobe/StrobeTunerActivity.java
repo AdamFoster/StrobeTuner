@@ -73,14 +73,18 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 
 		Log.d(TAG, "Started Strobe");
 
-		mStrobeView = (StrobeSurfaceView) findViewById(R.id.surfaceView);
-		mRecorder = mStrobeView.getRecorder();
-		mGestureDetector = new GestureDetector(this, new MyGestureDetector());
-
-		mNote = R.id.buttonA;
-
 		//bodgey copy protection, but whatever
 		mPlus = (getPackageManager().checkSignatures(getPackageName(), C.KEY_PACKAGE) == PackageManager.SIGNATURE_MATCH);
+		Log.i(TAG, "Strobe unlock key " + (mPlus ? "found" : "NOT found"));
+
+		mStrobeView = (StrobeSurfaceView) findViewById(R.id.surfaceView);
+		mRecorder = mStrobeView.getRecorder();
+		if (mPlus)
+		{
+			mGestureDetector = new GestureDetector(this, new MyGestureDetector());
+		}
+
+		mNote = R.id.buttonA;
 		
 		// hide calibration
 		LinearLayout calibrationLayout = (LinearLayout) findViewById(R.id.layoutCalibrate);
@@ -123,8 +127,8 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 			AdView adView = (AdView) findViewById(R.id.adView);
 			adView.loadAd(new AdRequest());
 			
-			findViewById(R.id.buttonAuto).setVisibility(View.GONE);
 		}
+		findViewById(R.id.buttonAuto).setVisibility(View.GONE);
 		
 		
 		// set calibration
@@ -227,14 +231,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				break;
 			
 			case R.id.buttonAuto:
-				if (mPlus)
-				{
-					mRecorder.setAutoDetect(true);
-				}
-				else
-				{
-					Toast.makeText(this, "Please purchase the full version to use this feature", Toast.LENGTH_LONG).show();
-				}
+				mRecorder.setAutoDetect(true);
 				break;
 				
 			default:
@@ -669,7 +666,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 	
 	class MyGestureDetector extends SimpleOnGestureListener
 	{
-		private static final float MIN_FLING_VEL = 400;
+		private static final float MIN_FLING_VEL = 300;
 		
 		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
