@@ -11,9 +11,11 @@ public class C
 	public static final String PREF_NOTE = "PREF_NOTE";
 	public static final String PREF_OCTAVE = "PREF_OCTAVE";
 	public static final String PREF_FIRST_RUN = "PREF_FIRST_RUN";
+	public static final String PREF_LAST_RUN_VERSION = "PREF_LAST_RUN_VERSION";
 	public static final String PREF_RESTORED_TRANSACTIONS = "PREF_RESTORED_TRANSACTIONS";
 	public static final String PREF_CALIBRATION_FACTOR = "PREF_CALIBRATION_FACTOR";
 	public static final String PREF_PLUS = "PREF_PLUS";
+	public static final String PREF_COLOR = "PREF_COLOR";
 
 	public static final float DEFAULT_A4_FREQ = 440;
 	public static final float DEFAULT_A4_FREQ_MAX = 2000;

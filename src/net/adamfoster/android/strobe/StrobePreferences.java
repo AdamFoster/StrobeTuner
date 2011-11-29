@@ -2,22 +2,29 @@ package net.adamfoster.android.strobe;
 
 import java.text.DecimalFormat;
 
+import net.adamfoster.android.strobe.color.ColorPickerDialog;
+import net.adamfoster.android.strobe.color.views.ColorPickerView.OnColorChangedListener;
+
 import com.google.ads.AdRequest;
 import com.google.ads.AdView;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.os.Bundle;
 
-public class StrobePreferences extends Activity implements OnClickListener
+public class StrobePreferences extends Activity implements OnClickListener, OnColorChangedListener
 {
 	private static String TAG = "StrobePreferences";
+	
+	private static final int DIALOG_COLOR = 0;
 	
 	private double mA4Freq;
 	private int mFlashThreshold;
@@ -26,6 +33,7 @@ public class StrobePreferences extends Activity implements OnClickListener
 	private boolean mSaveNote;
 	private boolean mSaveOctave;
 	private boolean mPlus;
+	private int mColor;
 	
 	private DecimalFormat mDecimalFormat;
 
@@ -50,11 +58,15 @@ public class StrobePreferences extends Activity implements OnClickListener
 			mSaveNote = extras.getBoolean(C.PREF_SAVE_NOTE, C.DEFAULT_SAVE_NOTE);
 			mSaveOctave = extras.getBoolean(C.PREF_SAVE_OCTAVE, C.DEFAULT_SAVE_OCTAVE);
 			mPlus = extras.getBoolean(C.PREF_PLUS, false);
+			mColor = extras.getInt(C.PREF_COLOR, getResources().getColor(R.color.Bright));
 			
 			if (! mPlus)
 	        {
 	        	AdView adView = (AdView) findViewById(R.id.adView);
 	            adView.loadAd(new AdRequest());
+	            
+	            findViewById(R.id.prefColor).setVisibility(View.GONE);
+	            findViewById(R.id.prefColorTextView).setVisibility(View.GONE);
 	        }
 			
 			EditText a4View = (EditText) findViewById(R.id.prefA4value);
@@ -74,7 +86,10 @@ public class StrobePreferences extends Activity implements OnClickListener
 
 			CheckBox saveOctaveBox = (CheckBox) findViewById(R.id.prefSaveOctaveBox);
 			saveOctaveBox.setChecked(mSaveOctave);
-}
+			
+			Button colorButton = (Button) findViewById(R.id.prefColor);
+			colorButton.setBackgroundColor(mColor);
+		}
 		else
 		{
 			Log.e(TAG, "No extras found!");
@@ -142,6 +157,8 @@ public class StrobePreferences extends Activity implements OnClickListener
 				}
 				catch (Exception e)	{}
 				
+				bundle.putInt(C.PREF_COLOR, mColor);
+				
                 intent.putExtras(bundle);
                 setResult(RESULT_OK, intent);
                 finish();
@@ -172,6 +189,8 @@ public class StrobePreferences extends Activity implements OnClickListener
 
 				CheckBox saveOctaveBox = (CheckBox) findViewById(R.id.prefSaveOctaveBox);
 				saveOctaveBox.setChecked(C.DEFAULT_SAVE_OCTAVE);
+				
+				onColorChanged(getResources().getColor(R.color.Bright));
 				
 				break;
 			case R.id.prefFreqTextView:
@@ -204,11 +223,44 @@ public class StrobePreferences extends Activity implements OnClickListener
 			case R.id.prefSaveOctaveTextView:
 				Toast.makeText(this, "Should the current octave be saved on exit?\n(default: no)" , Toast.LENGTH_LONG).show();
 				break;
+				
+			case R.id.prefColor:
+				showDialog(DIALOG_COLOR);
+				break;
 
 			default:
 				Log.e(TAG, "Unknown button click");
 				break;
 		}
+	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id)
+	{
+		Dialog dialog = null;
+		switch (id)
+		{
+			case DIALOG_COLOR:
+				ColorPickerDialog cpdialog = new ColorPickerDialog(this, mColor);
+				cpdialog.setOnColorChangedListener(this);
+				
+				dialog = cpdialog;
+				break;
+		}
+		
+		return dialog;
+	}
+	
+	@Override
+	protected void onPrepareDialog(int id, Dialog dialog) 
+	{
+		switch (id)
+		{
+			case DIALOG_COLOR:
+				((ColorPickerDialog)dialog).setOldColor(mColor);
+				break;
+		}
+		
 	}
 	
 	private boolean validate()
@@ -317,6 +369,13 @@ public class StrobePreferences extends Activity implements OnClickListener
 		}
 		
 		return retVal;
+	}
+
+	public void onColorChanged(int color) 
+	{
+		mColor = color;
+		Button colorButton = (Button) findViewById(R.id.prefColor);
+		colorButton.setBackgroundColor(mColor);
 	}
 }
 

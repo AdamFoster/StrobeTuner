@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -59,6 +60,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 	private static final int DIALOG_MORE_HELP = 1;
 	private static final int DIALOG_SETTINGS_HELP = 2;
 	private static final int DIALOG_PLUS_HELP = 3;
+	private static final int DIALOG_WHATS_NEW = 4;
 
 	private static final int ACTIVITY_PREF = 0;
 	
@@ -100,6 +102,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		mRecorder.setCalibrationFactor(settings.getInt(C.PREF_CALIBRATION_FACTOR, C.DEFAULT_CALIBRATION_FACTOR));
 		mRecorder.setSaveNote(settings.getBoolean(C.PREF_SAVE_NOTE, C.DEFAULT_SAVE_NOTE));
 		mRecorder.setSaveOctave(settings.getBoolean(C.PREF_SAVE_OCTAVE, C.DEFAULT_SAVE_OCTAVE));
+		mRecorder.setColor(settings.getInt(C.PREF_COLOR, getResources().getColor(R.color.Bright)));
 		
 		if (mRecorder.getSaveNote())
 		{
@@ -113,6 +116,20 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		{
 			mRecorder.setOctave(settings.getInt(C.PREF_OCTAVE, C.DEFAULT_OCTAVE));
 		}
+		
+		try
+		{
+			int versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+			if (settings.getInt(C.PREF_LAST_RUN_VERSION, 0) < versionCode)
+			{
+				showDialog(DIALOG_WHATS_NEW);
+			}
+		}
+		catch (NameNotFoundException ex)
+		{
+			// do nothing
+		}
+		
 		if (settings.getBoolean(C.PREF_FIRST_RUN, true))
 		{
 			// do first run stuff
@@ -126,9 +143,8 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		{
 			AdView adView = (AdView) findViewById(R.id.adView);
 			adView.loadAd(new AdRequest());
-			
 		}
-		findViewById(R.id.buttonAuto).setVisibility(View.GONE);
+		// findViewById(R.id.buttonAuto).setVisibility(View.GONE);
 		
 		
 		// set calibration
@@ -140,6 +156,10 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 	@Override
 	public boolean onTouchEvent(MotionEvent event)
 	{
+		if (mGestureDetector == null)
+		{
+			return super.onTouchEvent(event);
+		}
 		return mGestureDetector.onTouchEvent(event);
 	}
 	
@@ -270,6 +290,16 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		}
 		e.putInt(C.PREF_CALIBRATION_FACTOR, mRecorder.getCalibrationFactor());
 		e.putBoolean(C.PREF_FIRST_RUN, false);
+		
+		try 
+		{
+			int versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+			e.putInt(C.PREF_LAST_RUN_VERSION, versionCode);
+		} 
+		catch (NameNotFoundException ex) 
+		{
+			// do nothing
+		}
 		e.commit();
 	}
 	
@@ -344,6 +374,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				i.putExtra(C.PREF_MASK_OPEN, mRecorder.getOpenProportionPercent());
 				i.putExtra(C.PREF_SAVE_NOTE, mRecorder.getSaveNote());
 				i.putExtra(C.PREF_SAVE_OCTAVE, mRecorder.getSaveOctave());
+				i.putExtra(C.PREF_COLOR, mRecorder.getColor());
 				i.putExtra(C.PREF_PLUS, mPlus);
 				startActivityForResult(i, ACTIVITY_PREF);
 				return true;
@@ -398,6 +429,9 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 			case DIALOG_PLUS_HELP:
 				dialog = createPlusDialog();
 				break;
+			case DIALOG_WHATS_NEW:
+				dialog = createWhatsNewDialog();
+				break;
 			default:
 				dialog = null;
 		}
@@ -427,6 +461,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 					mRecorder.setSaveNote(extras.getBoolean(C.PREF_SAVE_NOTE, mRecorder.getSaveNote()));
 					mRecorder.setSaveOctave(extras.getBoolean(C.PREF_SAVE_OCTAVE, mRecorder.getSaveOctave()));
 					mRecorder.setCalibrationFactor(extras.getInt(C.PREF_CALIBRATION_FACTOR, mRecorder.getCalibrationFactor()));
+					mRecorder.setColor(extras.getInt(C.PREF_COLOR, getResources().getColor(R.color.Bright)));
 
 					//mRecorder.setOffA4();
 
@@ -438,6 +473,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 					e.putInt(C.PREF_CALIBRATION_FACTOR, mRecorder.getCalibrationFactor());
 					e.putBoolean(C.PREF_SAVE_NOTE, mRecorder.getSaveNote());
 					e.putBoolean(C.PREF_SAVE_OCTAVE, mRecorder.getSaveOctave());
+					e.putInt(C.PREF_COLOR, mRecorder.getColor());
 					e.commit();
 					
 					EditText calibration = (EditText) findViewById(R.id.editCalibrate);
@@ -447,6 +483,48 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 			default:
 				break;
 		}
+	}
+
+	private Dialog createWhatsNewDialog()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		try
+		{
+			String versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+			builder.setTitle("Strobe Tuner v" + versionName);
+		}
+		catch (Exception e)
+		{
+			builder.setTitle("Strobe Tuner Help");
+		}
+		builder.setCancelable(true);
+		builder.setPositiveButton("Close",
+				new DialogInterface.OnClickListener()
+				{
+					public void onClick(DialogInterface dialog, int id)
+					{
+						dialog.dismiss();
+					}
+				});
+		builder.setNeutralButton("Help", new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int id)
+			{
+				StrobeTunerActivity.this.showDialog(DIALOG_HELP);
+				dialog.dismiss();
+			}
+		});
+		builder.setMessage("What's New\n" +
+				"\n" +
+				"Free Users: \n" +
+				"- Auto detect pitch is now available\n" +
+				"\n" +
+				"Paid Users: \n" +
+				"- Swipe up and down to change octave\n" +
+				"- Swipe left and right to change note\n" +
+				"- Change the colour of the stobe in the settings menu\n");
+		return builder.create();
 	}
 
 	private Dialog createHelpDialog()
@@ -483,7 +561,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				+ "However, they are very powerful and with practice you can get more accurate results than " 
 				+ "with a standard electronic tuner and even tune partials above the fundamental.\n\n"
 				+ "To start, follow these easy steps:\n"
-				+ "1. Select the note you want to tune using the buttons below the disc\n"
+				+ "1. Select the note you want to tune using the buttons below the disc or choose auto-detect ('Auto' will appear)\n"
 				+ "2. Play the note and observe the patterns created on the disc\n"
 				+ "3. Tune your note by sharpening if the pattern rotates anti-clockwise and flattening if the pattern rotates clockwise\n"
 				+ "4. Your note is in tune if the pattern does not rotate");
@@ -586,11 +664,9 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		String message = "Purchasing the plus unlock key of this app:\n" +
 				"\n" +
 				"1. Removes all ads\n\n" +
-				"2. Enables the 'Auto Detect' button. This will attempt to automatically detect the " +
-				"the note being played and adjust the strobe tuner accordingly. Only the note is " +
-				"detected, the tuning mechanism works the same in the regular strobe tuner. You " +
-				"can still manually select the note if desired. When auto detection is enabled, " +
-				"the word 'Auto' appears beneath the frequency.";
+				"2. Swipe up and down to change octave.\n\n" +
+				"3. Swipe left and right to change note.\n\n" +
+				"4. Change the strobe colour in the settings menu";
 		if (! mPlus)
 		{
 			message = message

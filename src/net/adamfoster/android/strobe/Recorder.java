@@ -382,6 +382,17 @@ public class Recorder
 		mAutoDetect = autoDetect;
 	}
 	
+	public void setColor(int color)
+	{
+		mPaintBright.setColor(color);
+		mPaintMedium.setColor(color);
+		mPaintMedium.setAlpha(mPaintBright.getAlpha()/2);
+	}
+	public int getColor()
+	{
+		return mPaintBright.getColor();
+	}
+	
 	/*
 	public double getRelativeFreq(double a4multipler)
 	{
