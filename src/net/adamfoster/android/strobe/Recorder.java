@@ -84,6 +84,7 @@ public class Recorder
     private SurfaceHolder mSurfaceHolder;
     
     private Context mContext;
+    private StrobeTunerActivity mStrobeTunerActivity;
     
     private Paint mPaintBackground;
     private Paint mPaintCircle;
@@ -219,6 +220,11 @@ public class Recorder
 		
 		mAudio.stop();
 		mAudio.release();
+	}
+	
+	public void setActivity(StrobeTunerActivity sta)
+	{
+		mStrobeTunerActivity = sta;
 	}
 	
 	public void setNote(int note)
@@ -422,10 +428,23 @@ public class Recorder
 		{
 			Log.e(TAG, "Read 0 shorts");
 			mZerosRead++;
-			if (mZerosRead > 10)
+			if (mZerosRead > 50)
 			{
 				//lots of zeros read... bad things must be happening let's quit while we're ahead
-				Toast.makeText(mContext, "Too many samples failed", Toast.LENGTH_LONG);
+				//Toast.makeText(mContext, "Too many samples failed", Toast.LENGTH_LONG);
+				if (mStrobeTunerActivity != null)
+				{
+					mStrobeTunerActivity.runOnUiThread(new Thread()
+					{
+						@Override
+						public void run() 
+						{
+							Toast.makeText(mContext, "Too many samples failed. Please restart the Strobe Tuner.", Toast.LENGTH_LONG).show();
+						}
+					});
+				}
+				Log.e(TAG, "Failing - no shorts read for 50 cycles");
+				mZerosRead = 0;
 				mIsRunning = false;
 			}
 		}

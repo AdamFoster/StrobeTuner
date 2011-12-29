@@ -85,6 +85,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		{
 			mGestureDetector = new GestureDetector(this, new MyGestureDetector());
 		}
+		mRecorder.setActivity(this);
 
 		mNote = R.id.buttonA;
 		
@@ -507,6 +508,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 						dialog.dismiss();
 					}
 				});
+		/*
 		builder.setNeutralButton("Help", new DialogInterface.OnClickListener()
 		{
 			public void onClick(DialogInterface dialog, int id)
@@ -515,7 +517,11 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				dialog.dismiss();
 			}
 		});
+		// */
 		builder.setMessage("What's New\n" +
+				"\n" +
+				"Move to SD now working properly.\n" +
+				"Fixed bug with error message display.\n" +
 				"\n" +
 				"Free Users: \n" +
 				"- Auto detect pitch is now available\n" +
