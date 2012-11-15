@@ -48,19 +48,20 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 	private boolean mPlus;
 	private GestureDetector mGestureDetector;
 
-	private static final int MENU_8VA = 0;
-	private static final int MENU_8VB = 1;
-	// private static final int MENU_FREQUENCY = 2;
 	private static final int MENU_SETTINGS = 3;
 	private static final int MENU_HELP = 4;
 	private static final int MENU_BUY = 5;
 	private static final int MENU_CALIBRATE = 7;
+	private static final int MENU_SCALE = 8;
 
 	private static final int DIALOG_HELP = 0;
 	private static final int DIALOG_MORE_HELP = 1;
 	private static final int DIALOG_SETTINGS_HELP = 2;
 	private static final int DIALOG_PLUS_HELP = 3;
 	private static final int DIALOG_WHATS_NEW = 4;
+	private static final int DIALOG_SCALE = 5;
+	private static final int DIALOG_NOTE = 6;
+	private static final int DIALOG_PLUS_ONLY = 7;
 
 	private static final int ACTIVITY_PREF = 0;
 	
@@ -81,10 +82,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 
 		mStrobeView = (StrobeSurfaceView) findViewById(R.id.surfaceView);
 		mRecorder = mStrobeView.getRecorder();
-		if (mPlus)
-		{
-			mGestureDetector = new GestureDetector(this, new MyGestureDetector());
-		}
+		mGestureDetector = new GestureDetector(this, new MyGestureDetector());
 		mRecorder.setActivity(this);
 
 		mNote = R.id.buttonA;
@@ -103,7 +101,10 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		mRecorder.setCalibrationFactor(settings.getInt(C.PREF_CALIBRATION_FACTOR, C.DEFAULT_CALIBRATION_FACTOR));
 		mRecorder.setSaveNote(settings.getBoolean(C.PREF_SAVE_NOTE, C.DEFAULT_SAVE_NOTE));
 		mRecorder.setSaveOctave(settings.getBoolean(C.PREF_SAVE_OCTAVE, C.DEFAULT_SAVE_OCTAVE));
-		mRecorder.setColor(settings.getInt(C.PREF_COLOR, getResources().getColor(R.color.Bright)));
+		mRecorder.setSaveScale(settings.getBoolean(C.PREF_SAVE_SCALE, C.DEFAULT_SAVE_SCALE));
+        mRecorder.setColor(settings.getInt(C.PREF_COLOR, getResources().getColor(R.color.Bright)));
+        mRecorder.setScale(settings.getInt(C.PREF_SCALE, C.SCALE_INDEX_EQUAL));
+        mRecorder.setStartNote(settings.getInt(C.PREF_SCALE_START_NOTE, C.DEFAULT_NOTE));
 		
 		if (mRecorder.getSaveNote())
 		{
@@ -138,20 +139,32 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 			showDialog(DIALOG_HELP);
 		}
 
-		// mRecorder.setOffA4();
-
 		if (! mPlus)
 		{
 			AdView adView = (AdView) findViewById(R.id.adView);
 			adView.loadAd(new AdRequest());
 		}
-		// findViewById(R.id.buttonAuto).setVisibility(View.GONE);
-		
 		
 		// set calibration
 		EditText calibration = (EditText) findViewById(R.id.editCalibrate);
 		calibration.setText("" + mRecorder.getCalibrationFactor());
 		calibration.addTextChangedListener(this);
+		
+		setTitle();
+	}
+	
+	public void setTitle()
+	{
+	    String title = "";
+	    if (mRecorder.getScale() == C.SCALE_INDEX_EQUAL)
+	    {
+	        title += C.SCALES[mRecorder.getScale()].shortDescription;
+	    }
+	    else
+	    {
+	        title += C.SCALES[mRecorder.getScale()].shortDescription + " in " + Recorder.NOTE_NAMES[mRecorder.getScaleStartNote()];
+	    }
+	    setTitle(title);
 	}
 	
 	@Override
@@ -255,6 +268,13 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				mRecorder.setAutoDetect(true);
 				break;
 				
+            case R.id.button8va:
+                mRecorder.upOctave();
+                break;
+            case R.id.button8vb:
+                mRecorder.downOctave();
+                break;
+				
 			default:
 				Log.e(TAG, "Unrecognised click");
 		}
@@ -289,6 +309,11 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		{
 			e.putInt(C.PREF_OCTAVE, mRecorder.getOctave());
 		}
+		if (mRecorder.getSaveScale())
+		{
+		    e.putInt(C.PREF_SCALE, mRecorder.getScale());
+		    e.putInt(C.PREF_SCALE_START_NOTE, mRecorder.getScaleStartNote());
+		}
 		e.putInt(C.PREF_CALIBRATION_FACTOR, mRecorder.getCalibrationFactor());
 		e.putBoolean(C.PREF_FIRST_RUN, false);
 		
@@ -315,11 +340,11 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 	{
 		super.onCreateOptionsMenu(menu);
 
-		menu.add(0, MENU_8VB, 0, R.string.menu_8vb);
-		menu.add(0, MENU_8VA, 0, R.string.menu_8va);
-		menu.add(0, MENU_CALIBRATE, 0, R.string.menu_calibrate);
+		menu.add(0, MENU_SCALE, 0, R.string.menu_scale);
+        menu.add(0, MENU_CALIBRATE, 0, R.string.menu_calibrate);
 		menu.add(0, MENU_SETTINGS, 0, R.string.menu_settings);
 		menu.add(0, MENU_HELP, 0, R.string.menu_help);
+        
 		if (! mPlus)
 		{
 			menu.add(0, MENU_BUY, 0, R.string.menu_buy);
@@ -357,14 +382,6 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 
 		switch (item.getItemId())
 		{
-			case MENU_8VA:
-				mRecorder.upOctave();
-				return true;
-				
-			case MENU_8VB:
-				mRecorder.downOctave();
-				return true;
-				
 			case MENU_SETTINGS:
 				stopCalibration();
 				
@@ -375,7 +392,8 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				i.putExtra(C.PREF_MASK_OPEN, mRecorder.getOpenProportionPercent());
 				i.putExtra(C.PREF_SAVE_NOTE, mRecorder.getSaveNote());
 				i.putExtra(C.PREF_SAVE_OCTAVE, mRecorder.getSaveOctave());
-				i.putExtra(C.PREF_COLOR, mRecorder.getColor());
+				i.putExtra(C.PREF_SAVE_SCALE, mRecorder.getSaveScale());
+                i.putExtra(C.PREF_COLOR, mRecorder.getColor());
 				i.putExtra(C.PREF_PLUS, mPlus);
 				startActivityForResult(i, ACTIVITY_PREF);
 				return true;
@@ -407,6 +425,9 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				}
 				
 				return true;
+			case MENU_SCALE:
+			    showDialog(DIALOG_SCALE);
+			    return true;
 		}
 
 		return false;
@@ -433,7 +454,16 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 			case DIALOG_WHATS_NEW:
 				dialog = createWhatsNewDialog();
 				break;
-			default:
+			case DIALOG_SCALE:
+			    dialog = createScaleDialog();
+			    break;
+            case DIALOG_NOTE:
+                dialog = createNoteDialog();
+                break;
+            case DIALOG_PLUS_ONLY:
+                dialog = createPlusDialog();
+                break;
+            default:
 				dialog = null;
 		}
 		return dialog;
@@ -461,7 +491,8 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 					mRecorder.setOpenProportionPercent(extras.getInt(C.PREF_MASK_OPEN, mRecorder.getOpenProportionPercent()));
 					mRecorder.setSaveNote(extras.getBoolean(C.PREF_SAVE_NOTE, mRecorder.getSaveNote()));
 					mRecorder.setSaveOctave(extras.getBoolean(C.PREF_SAVE_OCTAVE, mRecorder.getSaveOctave()));
-					mRecorder.setCalibrationFactor(extras.getInt(C.PREF_CALIBRATION_FACTOR, mRecorder.getCalibrationFactor()));
+					mRecorder.setSaveScale(extras.getBoolean(C.PREF_SAVE_SCALE, mRecorder.getSaveScale()));
+                    mRecorder.setCalibrationFactor(extras.getInt(C.PREF_CALIBRATION_FACTOR, mRecorder.getCalibrationFactor()));
 					mRecorder.setColor(extras.getInt(C.PREF_COLOR, getResources().getColor(R.color.Bright)));
 
 					//mRecorder.setOffA4();
@@ -474,6 +505,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 					e.putInt(C.PREF_CALIBRATION_FACTOR, mRecorder.getCalibrationFactor());
 					e.putBoolean(C.PREF_SAVE_NOTE, mRecorder.getSaveNote());
 					e.putBoolean(C.PREF_SAVE_OCTAVE, mRecorder.getSaveOctave());
+					e.putBoolean(C.PREF_SAVE_SCALE, mRecorder.getSaveScale());
 					e.putInt(C.PREF_COLOR, mRecorder.getColor());
 					e.commit();
 					
@@ -485,6 +517,98 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				break;
 		}
 	}
+	
+	   /**
+     * Used for creating the scale selection dialog. 
+     * If the scale is non-equal tempered, show the note selection dialog.
+     * @return the scale selection AlertDialog
+     */
+    private Dialog createScaleDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Pick a temperament");
+        
+        CharSequence[] items = new CharSequence[C.SCALES.length];
+        for (int i=0 ; i<C.SCALES.length ;i++ )
+        {
+            items[i] = C.SCALES[i].description;
+        }
+    
+        builder.setSingleChoiceItems(items, mRecorder.getScale(), new DialogInterface.OnClickListener() 
+        {
+            public void onClick(DialogInterface dialog, int item) 
+            {
+                mRecorder.setScale(item);
+                dialog.dismiss();
+                if (! C.SCALES[item].isEqual)
+                { 
+                    Log.d(TAG, "Show other dialog");
+                    showDialog(DIALOG_NOTE);
+                }
+                else 
+                {
+                    Toast.makeText(StrobeTunerActivity.this, "Temperament '" + C.SCALES[mRecorder.getScale()].description + "' selected", Toast.LENGTH_SHORT).show();
+                    StrobeTunerActivity.this.setTitle();
+                    if (!mPlus)
+                    {
+                        mRecorder.setScale(C.SCALE_INDEX_EQUAL);
+                        StrobeTunerActivity.this.setTitle();
+                        showDialog(DIALOG_PLUS_ONLY);
+                    }
+                }
+            }
+        });
+        AlertDialog alert = builder.create();
+        return alert;
+    }
+
+    /**
+     * Used for creating a note selection dialog box. For choosing the start note of a scale
+     * @return
+     */
+    private Dialog createNoteDialog()
+    {
+        Log.i("TAG", "Creating note dialog");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Pick a key");
+        
+        CharSequence[] items = new CharSequence[Recorder.NOTES.length];
+        for (int i=0 ; i<Recorder.NOTES.length ; i++)
+        {
+            items[i] = Recorder.NOTE_NAMES[i]; //Recorder.NOTES[i] + (Recorder.SHARPS[i]?"#":"");
+        }
+    
+        builder.setSingleChoiceItems(items, mRecorder.getScaleStartNote(), new DialogInterface.OnClickListener() 
+        {
+            public void onClick(DialogInterface dialog, int item) 
+            {
+                mRecorder.setStartNote(item);
+                dialog.dismiss();
+                StrobeTunerActivity.this.setTitle();
+                if (!mPlus)
+                {
+                    mRecorder.setScale(C.SCALE_INDEX_EQUAL);
+                    mRecorder.setStartNote(C.DEFAULT_NOTE);
+                    StrobeTunerActivity.this.setTitle();
+                    showDialog(DIALOG_PLUS_ONLY);
+                }
+                else
+                {
+                    if (mRecorder.getScale() == C.SCALE_INDEX_EQUAL)
+                    {
+                        Toast.makeText(StrobeTunerActivity.this, "Temperament '" + C.SCALES[mRecorder.getScale()].description + "' selected", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(StrobeTunerActivity.this, "Temperament '" + C.SCALES[mRecorder.getScale()].description + " in " + Recorder.NOTE_NAMES[mRecorder.getScaleStartNote()] + "' selected", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+        });
+        AlertDialog alert = builder.create();
+        return alert;
+    }
 
 	private Dialog createWhatsNewDialog()
 	{
@@ -508,28 +632,18 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 						dialog.dismiss();
 					}
 				});
-		/*
-		builder.setNeutralButton("Help", new DialogInterface.OnClickListener()
-		{
-			public void onClick(DialogInterface dialog, int id)
-			{
-				StrobeTunerActivity.this.showDialog(DIALOG_HELP);
-				dialog.dismiss();
-			}
-		});
-		// */
 		builder.setMessage("What's New\n" +
 				"\n" +
-				"Move to SD now working properly.\n" +
-				"Fixed bug with error message display.\n" +
-				"\n" +
-				"Free Users: \n" +
-				"- Auto detect pitch is now available\n" +
+				"Compile target/theme for ICS.\n" +
 				"\n" +
 				"Paid Users: \n" +
-				"- Swipe up and down to change octave\n" +
-				"- Swipe left and right to change note\n" +
-				"- Change the colour of the stobe in the settings menu\n");
+				"- Added scales/temperament option in menu. " +
+				"(NB: A440 or your A4 frequency will be constant)\n" + 
+				"\n" +
+                "Free Users: \n" +
+                "- Swipe up and down to change octave\n" +
+                "- Swipe left and right to change note\n" 
+                );
 		return builder.create();
 	}
 
@@ -645,7 +759,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				+ "NOISE THRESHOLD.\ndetermines how much background noise is ignored. This is generally dependent on your phone and "
 				+ "the environment. The default value is the typical background noise of a sedate but populated office\n\n"
 				+ "CALIBRATION FACTOR.\nis used for calibrating the application to a specific note. It adjusts the app's internal tuning by 0.1 of a cent. This can also be changed from the Calibration menu item.\n\n"
-				+ "SAVE NOTE and SAVE OCTAVE.\nwill remember the note and/or octave that was selected when the application restarts.\n\n"
+				+ "SAVE NOTE, SAVE OCTAVE, SAVE TEMPERAMENT.\nwill remember the note, octave, or temperament that was selected when the application restarts.\n\n"
 				+ "Ok will save changes, Cancel or the back button will cancel changes and Defaults will reset to the application defaults (remember to click ok after setting defaults\n";
 		
 		builder.setMessage(message);
@@ -670,9 +784,8 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		String message = "Purchasing the plus unlock key of this app:\n" +
 				"\n" +
 				"1. Removes all ads\n\n" +
-				"2. Swipe up and down to change octave.\n\n" +
-				"3. Swipe left and right to change note.\n\n" +
-				"4. Change the strobe colour in the settings menu";
+				"2. Enables choosing of different temperaments.\n\n" +
+				"3. Change the strobe colour in the settings menu";
 		if (! mPlus)
 		{
 			message = message

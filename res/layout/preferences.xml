@@ -18,7 +18,7 @@
 
     <!-- Buttons -->
     <Button android:id="@+id/prefReset" 
-    	android:layout_height="wrap_content" android:layout_width="80dp" 
+    	android:layout_height="wrap_content" android:layout_width="wrap_content" 
     	android:text="@string/reset" android:onClick="onClick" 
     	android:layout_above="@id/adView" android:layout_alignParentRight="true" android:layout_marginBottom="10dp"/>
     <Button android:id="@+id/prefCancel" 
@@ -27,7 +27,7 @@
     	android:layout_alignTop="@id/prefReset" android:layout_toLeftOf="@id/prefReset" />
     <Button android:id="@+id/prefOk" 
       	android:layout_height="wrap_content" android:layout_width="80dp" 
-      	android:text="@string/ok" android:onClick="onClick" 
+      	android:text="@android:string/ok" android:onClick="onClick" 
       	android:layout_alignTop="@id/prefCancel" android:layout_toLeftOf="@id/prefCancel"/>
     
     <LinearLayout android:id="@+id/layoutLine"
@@ -50,19 +50,19 @@
 		 	
 		    <TextView android:id="@+id/prefHeaderText" 
 		  		android:layout_height="wrap_content" android:layout_width="wrap_content" 
-		  		android:text="Preferences" 
+		  		android:text="@string/preferences" 
 		  		android:textAppearance="?android:attr/textAppearanceLarge" />
 		  
 		  	<!-- A4 Frequency -->
 		 	<TextView android:id="@+id/prefFreqTextView" 
 		 		android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginTop="20dp"
-		 		android:text="A4 Frequency" 
+		 		android:text="@string/a4freq" 
 		 		android:paddingTop="4dp" android:paddingBottom="8dp"
 		 		android:layout_below="@id/prefHeaderText" android:layout_alignParentLeft="true"
 		 		android:onClick="onClick" android:clickable="true"/>
 		 	<TextView android:id="@+id/textViewHz" 
 		     	android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_margin="5dp"
-		     	android:text="Hz" android:textAppearance="?android:attr/textAppearanceMedium" 
+		     	android:text="@string/hz" android:textAppearance="?android:attr/textAppearanceMedium" 
 		     	android:layout_alignParentRight="true" android:layout_alignTop="@id/prefFreqTextView"/>
 		 	<EditText android:id="@+id/prefA4value" android:inputType="numberDecimal" android:gravity="right"
 		 		android:layout_height="wrap_content" android:layout_width="120dp" 
@@ -70,7 +70,7 @@
 		 		
 		 	<!-- Aperture size -->
 		 	<TextView android:id="@+id/prefApatureTextView" 
-		 		android:text="Mask Aperture Size" 
+		 		android:text="@string/maskSize" 
 		 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		 		android:layout_marginTop="20dp"
 		 		android:paddingTop="4dp" android:paddingBottom="8dp"
@@ -78,7 +78,7 @@
 		 		android:onClick="onClick" android:clickable="true"/>
 		     <TextView android:id="@+id/textViewPC" 
 		     	android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_margin="5dp"
-		     	android:text="%" android:textAppearance="?android:attr/textAppearanceMedium" 
+		     	android:text="@string/percentSign" android:textAppearance="?android:attr/textAppearanceMedium" 
 		     	android:layout_alignParentRight="true" android:layout_alignTop="@id/prefApatureTextView"/>
 			<EditText android:id="@+id/prefMaskValue" android:inputType="number" android:gravity="right"
 		      	android:layout_height="wrap_content" android:layout_width="wrap_content" 
@@ -88,7 +88,7 @@
 		     <!-- Noise threshold -->
 		     <TextView android:id="@+id/prefNoiseTextView" 
 		     	android:layout_width="wrap_content" android:layout_height="wrap_content" 
-		     	android:text="Noise Threshold" 
+		     	android:text="@string/noiseThreshold" 
 		     	android:layout_marginTop="20dp"  
 		 		android:paddingTop="4dp" android:paddingBottom="8dp"
 		   	  	android:layout_below="@id/prefMaskValue" android:layout_alignParentLeft="true"
@@ -102,7 +102,7 @@
 		     <!-- Calibration Factor -->
 		     <TextView android:id="@+id/prefCalibrationTextView" 
 		     	android:layout_width="wrap_content" android:layout_height="wrap_content" 
-		     	android:text="Calibration Factor" 
+		     	android:text="@string/calibrationFactor" 
 		     	android:layout_marginTop="20dp"
 		 		android:paddingTop="4dp" android:paddingBottom="8dp"
 		   	  	android:layout_below="@id/prefNoiseValue" android:layout_alignParentLeft="true"
@@ -116,7 +116,7 @@
 			 <!-- Check boxes -->
 		     <TextView android:id="@+id/prefSaveNoteTextView" 
 		     	android:layout_width="wrap_content" android:layout_height="wrap_content" 
-		     	android:text="Save Note" 
+		     	android:text="@string/saveNote" 
 		     	android:layout_marginTop="20dp"
 		   	  	android:layout_below="@id/prefCalibrationValue" android:layout_alignParentLeft="true"
 		   	  	android:onClick="onClick" android:clickable="true"/>
@@ -128,7 +128,7 @@
 		
 		     <TextView android:id="@+id/prefSaveOctaveTextView" 
 		     	android:layout_width="wrap_content" android:layout_height="wrap_content" 
-		     	android:text="Save Octave" 
+		     	android:text="@string/saveOctave" 
 		     	android:layout_marginTop="20dp"
 		   	  	android:layout_below="@id/prefSaveNoteBox" android:layout_alignParentLeft="true"
 		   	  	android:onClick="onClick" android:clickable="true"/>
@@ -137,12 +137,24 @@
 		    	android:layout_width="wrap_content" 
 		    	android:layout_height="wrap_content" 
 		    	android:layout_alignTop="@id/prefSaveOctaveTextView" android:layout_alignLeft="@+id/prefA4value" />
-
+        
+             <TextView android:id="@+id/prefSaveScaleTextView" 
+                android:layout_width="wrap_content" android:layout_height="wrap_content" 
+                android:text="@string/saveScale" 
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/prefSaveOctaveBox" android:layout_alignParentLeft="true"
+                android:onClick="onClick" android:clickable="true"/>
+		    <CheckBox android:id="@+id/prefSaveScaleBox" 
+                android:text="" 
+                android:layout_width="wrap_content" 
+                android:layout_height="wrap_content" 
+                android:layout_alignTop="@id/prefSaveScaleTextView" android:layout_alignLeft="@+id/prefA4value" />
+		    
 		     <TextView android:id="@+id/prefColorTextView" 
 		     	android:layout_width="wrap_content" android:layout_height="wrap_content" 
-		     	android:text="Strobe Colour" 
+		     	android:text="@string/strobeColour" 
 		     	android:layout_marginTop="20dp"
-		   	  	android:layout_below="@id/prefSaveOctaveBox" android:layout_alignParentLeft="true"
+		   	  	android:layout_below="@id/prefSaveScaleBox" android:layout_alignParentLeft="true"
 		   	  	android:onClick="onClick" android:clickable="true"/>
 		    <Button android:id="@+id/prefColor" 
 		    	android:text="" android:onClick="onClick" 

@@ -15,52 +15,55 @@
 	<LinearLayout 
 			android:id="@+id/layoutSharps"
 			android:layout_height="wrap_content" 
-			android:layout_width="fill_parent" android:gravity="center_horizontal" >
-		<Button android:id="@+id/buttonCS" android:text=" " android:onClick="onClick" 
+			android:layout_width="fill_parent" android:gravity="center_horizontal" 
+			android:background="@color/Black">
+		<Button android:id="@+id/buttonCS" android:text="@string/blank" android:onClick="onClick" 
 				android:layout_width="33dp" android:layout_height="wrap_content"/>
-		<Button android:id="@+id/buttonDS" android:text=" " android:onClick="onClick" 
+		<Button android:id="@+id/buttonDS" android:text="@string/blank" android:onClick="onClick" 
 				android:layout_width="33dp" android:layout_height="wrap_content"
 				android:layout_marginRight="33dp"/>
-		<Button android:id="@+id/buttonFS" android:text=" " android:onClick="onClick" 
+		<Button android:id="@+id/buttonFS" android:text="@string/blank" android:onClick="onClick" 
 				android:layout_width="33dp" android:layout_height="wrap_content" />
-		<Button android:id="@+id/buttonGS" android:text=" " android:onClick="onClick" 
+		<Button android:id="@+id/buttonGS" android:text="@string/blank" android:onClick="onClick" 
 				android:layout_width="33dp" android:layout_height="wrap_content"/>
-		<Button android:id="@+id/buttonAS" android:text=" " android:onClick="onClick" 
+		<Button android:id="@+id/buttonAS" android:text="@string/blank" android:onClick="onClick" 
 				android:layout_width="33dp" android:layout_height="wrap_content"/>
 	</LinearLayout>
 
 	<LinearLayout 
 			android:id="@+id/layoutNaturals"
 			android:layout_height="wrap_content" 
-			android:layout_width="fill_parent" android:gravity="center_horizontal"> 
-		<Button android:id="@+id/buttonC" android:text="C" android:onClick="onClick" 
+			android:layout_width="fill_parent" android:gravity="center_horizontal"
+			android:background="@color/Black"> 
+		<Button android:id="@+id/buttonC" android:text="@string/c" android:onClick="onClick" 
 				android:layout_width="33dp" android:layout_height="wrap_content" />
-		<Button android:id="@+id/buttonD" android:text="D" android:onClick="onClick" 
+		<Button android:id="@+id/buttonD" android:text="@string/d" android:onClick="onClick" 
 				android:layout_width="33dp" android:layout_height="wrap_content" />
-		<Button android:id="@+id/buttonE" android:text="E" android:onClick="onClick" 
+		<Button android:id="@+id/buttonE" android:text="@string/e" android:onClick="onClick" 
 				android:layout_width="33dp" android:layout_height="wrap_content" />
-		<Button android:id="@+id/buttonF" android:text="F" android:onClick="onClick" 
+		<Button android:id="@+id/buttonF" android:text="@string/f" android:onClick="onClick" 
 				android:layout_width="33dp" android:layout_height="wrap_content" />
-		<Button android:id="@+id/buttonG" android:text="G" android:onClick="onClick" 
+		<Button android:id="@+id/buttonG" android:text="@string/g" android:onClick="onClick" 
 				android:layout_width="33dp" android:layout_height="wrap_content" />
-		<Button android:id="@+id/buttonA" android:text="A" android:onClick="onClick" 
+		<Button android:id="@+id/buttonA" android:text="@string/a" android:onClick="onClick" 
 				android:layout_width="33dp" android:layout_height="wrap_content" />
-		<Button android:id="@+id/buttonB" android:text="B" android:onClick="onClick" 
+		<Button android:id="@+id/buttonB" android:text="@string/b" android:onClick="onClick" 
 				android:layout_width="33dp" android:layout_height="wrap_content" />
 	</LinearLayout>
 	
 	<TextView android:id="@+id/textCalibrate" 
 			android:layout_height="wrap_content" 
 			android:layout_width="fill_parent" android:gravity="center_horizontal" 
-			android:text="Calibration Factor"
+			android:text="@string/calibrationFactor"
 			android:textColor="@color/CentreText"
 			/>
 	<LinearLayout android:id="@+id/layoutCalibrate" 			
 			android:layout_height="wrap_content" 
-			android:layout_width="fill_parent" android:gravity="center_horizontal">
-		<Button android:id="@+id/buttonCalibrateDownBig" android:text="&lt;&lt;" android:onClick="onClick" 
+			android:layout_width="fill_parent" android:gravity="center_horizontal"
+			android:background="@color/Black" >
+		<Button android:id="@+id/buttonCalibrateDownBig" android:text="@string/ltlt" android:onClick="onClick" 
 				android:layout_width="50dp" android:layout_height="wrap_content" />
-		<Button android:id="@+id/buttonCalibrateDownSmall" android:text="&lt;" android:onClick="onClick" 
+		<Button android:id="@+id/buttonCalibrateDownSmall" android:text="@string/lt" android:onClick="onClick" 
 				android:layout_width="50dp" android:layout_height="wrap_content" />
 		<EditText android:layout_weight="1" android:id="@+id/editCalibrate" 
 				android:layout_width="wrap_content" android:layout_height="wrap_content" 
@@ -68,16 +71,32 @@
 			<requestFocus></requestFocus>
 		</EditText>
 		
-		<Button android:id="@+id/buttonCalibrateUpSmall" android:text="&gt;" android:onClick="onClick" 
+		<Button android:id="@+id/buttonCalibrateUpSmall" android:text="@string/gt" android:onClick="onClick" 
 				android:layout_width="50dp" android:layout_height="wrap_content" />
-		<Button android:id="@+id/buttonCalibrateUpBig" android:text="&gt;&gt;" android:onClick="onClick" 
+		<Button android:id="@+id/buttonCalibrateUpBig" android:text="@string/gtgt" android:onClick="onClick" 
 				android:layout_width="50dp" android:layout_height="wrap_content" />
 	</LinearLayout>
 	
-	<Button android:id="@+id/buttonAuto" android:text="@string/autoDetect"
-		android:onClick="onClick" 
-		android:layout_width="fill_parent" android:layout_height="wrap_content" />/>
-	
+	<RelativeLayout          
+            android:layout_height="wrap_content" 
+            android:layout_width="fill_parent" android:gravity="center_horizontal"
+            android:background="@color/Black">
+	    <Button android:id="@+id/button8vb" android:text="@string/menu_8vb"
+	        android:onClick="onClick" 
+	        android:layout_width="wrap_content" android:layout_height="wrap_content" 
+	        android:layout_alignParentLeft="true" 
+	        android:paddingLeft="20dip" android:paddingRight="20dip"/>
+        <Button android:id="@+id/button8va" android:text="@string/menu_8va"
+            android:onClick="onClick" 
+            android:layout_width="wrap_content" android:layout_height="wrap_content" 
+            android:layout_alignParentRight="true"
+            android:paddingLeft="20dip" android:paddingRight="20dip" />
+	    <Button android:id="@+id/buttonAuto" android:text="@string/autoDetect"
+	        android:onClick="onClick" 
+	        android:layout_width="wrap_content" android:layout_height="wrap_content" 
+	        android:layout_toLeftOf="@id/button8va" android:layout_toRightOf="@id/button8vb" />
+    </RelativeLayout>
+   		
 	<com.google.ads.AdView android:id="@+id/adView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

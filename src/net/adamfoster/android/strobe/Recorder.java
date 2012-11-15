@@ -37,6 +37,7 @@ public class Recorder
 	
 	public static String[] NOTES = {"C", "C", "D", "D", "E", "F", "F", "G", "G", "A", "A", "B"};
 	public static boolean[] SHARPS = {false, true, false, true, false, false, true, false, true, false, true, false};
+	public static String[] NOTE_NAMES = {"C", "C# / Db", "D", "D# / Eb", "E", "F", "F# / Gb", "G", "G# / Ab", "A", "A# / Bb", "B"};
 	
 	public static int SAMPLE_FREQUENCY = 44100;
 	public static int RINGS = 6;
@@ -63,6 +64,8 @@ public class Recorder
 	private int mCalibrationFactor;
 	private int mFlashThreshold;
 	private boolean mAutoDetect;
+    private int mScale;
+    private int mScaleStartNote;
 	
 	private DecimalFormat mDecimalFormat;
 	
@@ -72,7 +75,8 @@ public class Recorder
 
 	private boolean mSaveNote;
 	private boolean mSaveOctave;
-	
+    private boolean mSaveScale;
+
 	private AudioRecord mAudio;
 	int mSamplesRead;
 	
@@ -125,6 +129,7 @@ public class Recorder
         
         mSaveNote = false;
         mSaveOctave = false;
+        mSaveScale = false;
         
         mWindow = new double[WINDOW_SIZE];
         mWindowSize = 0;
@@ -318,7 +323,16 @@ public class Recorder
 		return mSaveOctave;
 	}
 	
-	public void setSurfaceSize(int width, int height) 
+	public void setSaveScale(boolean saveScale)
+    {
+        mSaveScale = saveScale;
+    }
+    public boolean getSaveScale()
+    {
+        return mSaveScale;
+    }
+    
+    public void setSurfaceSize(int width, int height) 
     {
         synchronized (mSurfaceHolder) 
         {
@@ -344,6 +358,23 @@ public class Recorder
 	{
 		mA4Freq = a4Freq;
 	}
+	
+	public int getScale()
+	{
+	    return mScale;
+	}
+	public void setScale(int scale)
+	{
+	    mScale = scale;
+	}
+    public int getScaleStartNote()
+    {
+        return mScaleStartNote;
+    }
+    public void setStartNote(int startNote)
+    {
+        mScaleStartNote = startNote;
+    }
 	
 	public void setCalibrationFactor(int calibrationFactor)
 	{
@@ -399,18 +430,21 @@ public class Recorder
 		return mPaintBright.getColor();
 	}
 	
-	/*
-	public double getRelativeFreq(double a4multipler)
-	{
-		return mA4Freq * a4multipler * Math.pow(2, mOctave - 4);
-	} // */
-	
 	public double getTargetFreq()
 	{
 		// set note4 based on A4 frequency
-		double targetFreq = mA4Freq * Math.pow(2, (mNote-NOTE_A) / 12.0); 
+		//double targetFreq = mA4Freq * Math.pow(2, (mNote-NOTE_A) / 12.0); 
 		//shift octaves
-		return targetFreq * Math.pow(2, mOctave - 4);
+		//return targetFreq * Math.pow(2, mOctave - 4);
+		
+	    double startNoteFreq = mA4Freq / C.SCALES[mScale].factors[(Recorder.NOTE_A-mScaleStartNote+Recorder.NOTES.length)%Recorder.NOTES.length];
+        startNoteFreq *= Math.pow(2, mOctave-4); //adjust for octave : A4 is the default
+        if (mScaleStartNote > Recorder.NOTE_A) //hack, but it works
+        {
+            startNoteFreq *= 2;
+        }
+        return startNoteFreq * C.SCALES[mScale].factors[(mNote-mScaleStartNote+Recorder.NOTES.length)%Recorder.NOTES.length];
+
 	}
 	
 	private void read()

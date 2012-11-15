@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.opengl.Visibility;
 import android.os.Bundle;
 
 public class StrobePreferences extends Activity implements OnClickListener, OnColorChangedListener
@@ -32,6 +33,7 @@ public class StrobePreferences extends Activity implements OnClickListener, OnCo
 	private int mCalibrationFactor;
 	private boolean mSaveNote;
 	private boolean mSaveOctave;
+	private boolean mSaveScale;
 	private boolean mPlus;
 	private int mColor;
 	
@@ -57,6 +59,7 @@ public class StrobePreferences extends Activity implements OnClickListener, OnCo
 			mAperture = extras.getInt(C.PREF_MASK_OPEN, C.DEFAULT_MASK_OPEN);
 			mSaveNote = extras.getBoolean(C.PREF_SAVE_NOTE, C.DEFAULT_SAVE_NOTE);
 			mSaveOctave = extras.getBoolean(C.PREF_SAVE_OCTAVE, C.DEFAULT_SAVE_OCTAVE);
+			mSaveScale = extras.getBoolean(C.PREF_SAVE_SCALE, C.DEFAULT_SAVE_SCALE);
 			mPlus = extras.getBoolean(C.PREF_PLUS, false);
 			mColor = extras.getInt(C.PREF_COLOR, getResources().getColor(R.color.Bright));
 			
@@ -64,9 +67,12 @@ public class StrobePreferences extends Activity implements OnClickListener, OnCo
 	        {
 	        	AdView adView = (AdView) findViewById(R.id.adView);
 	            adView.loadAd(new AdRequest());
-	            
-	            findViewById(R.id.prefColor).setVisibility(View.GONE);
-	            findViewById(R.id.prefColorTextView).setVisibility(View.GONE);
+                
+                findViewById(R.id.prefColor).setVisibility(View.GONE);
+                findViewById(R.id.prefColorTextView).setVisibility(View.GONE);
+                
+                findViewById(R.id.prefSaveScaleBox).setVisibility(View.GONE);
+                findViewById(R.id.prefSaveScaleTextView).setVisibility(View.GONE);
 	        }
 			
 			EditText a4View = (EditText) findViewById(R.id.prefA4value);
@@ -87,6 +93,9 @@ public class StrobePreferences extends Activity implements OnClickListener, OnCo
 			CheckBox saveOctaveBox = (CheckBox) findViewById(R.id.prefSaveOctaveBox);
 			saveOctaveBox.setChecked(mSaveOctave);
 			
+            CheckBox saveScaleBox = (CheckBox) findViewById(R.id.prefSaveScaleBox);
+            saveScaleBox.setChecked(mSaveScale);
+            
 			Button colorButton = (Button) findViewById(R.id.prefColor);
 			colorButton.setBackgroundColor(mColor);
 		}
@@ -157,7 +166,14 @@ public class StrobePreferences extends Activity implements OnClickListener, OnCo
 				}
 				catch (Exception e)	{}
 				
-				bundle.putInt(C.PREF_COLOR, mColor);
+                try
+                {
+                    CheckBox saveScaleBox = (CheckBox) findViewById(R.id.prefSaveScaleBox);
+                    bundle.putBoolean(C.PREF_SAVE_SCALE, saveScaleBox.isChecked());
+                }
+                catch (Exception e) {}
+
+                bundle.putInt(C.PREF_COLOR, mColor);
 				
                 intent.putExtras(bundle);
                 setResult(RESULT_OK, intent);
@@ -190,7 +206,10 @@ public class StrobePreferences extends Activity implements OnClickListener, OnCo
 				CheckBox saveOctaveBox = (CheckBox) findViewById(R.id.prefSaveOctaveBox);
 				saveOctaveBox.setChecked(C.DEFAULT_SAVE_OCTAVE);
 				
-				onColorChanged(getResources().getColor(R.color.Bright));
+				CheckBox saveScaleBox = (CheckBox) findViewById(R.id.prefSaveScaleBox);
+                saveScaleBox.setChecked(C.DEFAULT_SAVE_SCALE);
+                
+                onColorChanged(getResources().getColor(R.color.Bright));
 				
 				break;
 			case R.id.prefFreqTextView:
@@ -223,6 +242,9 @@ public class StrobePreferences extends Activity implements OnClickListener, OnCo
 			case R.id.prefSaveOctaveTextView:
 				Toast.makeText(this, "Should the current octave be saved on exit?\n(default: no)" , Toast.LENGTH_LONG).show();
 				break;
+            case R.id.prefSaveScaleTextView:
+                Toast.makeText(this, "Should the current temperament and start note be saved on exit?\n(default: no)" , Toast.LENGTH_LONG).show();
+                break;
 				
 			case R.id.prefColor:
 				showDialog(DIALOG_COLOR);

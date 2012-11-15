@@ -7,5 +7,6 @@
     <color name="Dark">#000000</color>
     <color name="CentreText">#AAAAAA</color>
     <color name="White">#FFFFFF</color>
+    <color name="Black">#000000</color>
     
 </resources>
