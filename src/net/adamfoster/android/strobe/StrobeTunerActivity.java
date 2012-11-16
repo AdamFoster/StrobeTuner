@@ -77,7 +77,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		Log.d(TAG, "Started Strobe");
 
 		//bodgey copy protection, but whatever
-		mPlus = (getPackageManager().checkSignatures(getPackageName(), C.KEY_PACKAGE) == PackageManager.SIGNATURE_MATCH);
+		mPlus = true || (getPackageManager().checkSignatures(getPackageName(), C.KEY_PACKAGE) == PackageManager.SIGNATURE_MATCH);
 		Log.i(TAG, "Strobe unlock key " + (mPlus ? "found" : "NOT found"));
 
 		mStrobeView = (StrobeSurfaceView) findViewById(R.id.surfaceView);

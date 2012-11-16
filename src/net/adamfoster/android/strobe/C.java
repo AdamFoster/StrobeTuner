@@ -48,6 +48,7 @@ public class C
 	
     private static final double QUARTER_ROOT_5 = Math.pow(5, 0.25);
     private static final double ROOT_5 = Math.sqrt(5);
+    private static final double ROOT_2 = Math.sqrt(2);
     
     public static final Scale[] SCALES = 
         {
@@ -171,6 +172,66 @@ public class C
                         "r5q5/2", "4r5/5", "5q5/4" //maj 6
                     },
                     "1/4-comma meantone (5-)"),
+            new Scale("Werckmeister III", false, new double[]
+                    {
+                        1.0, 256.0/243.0, 64.0/81.0*ROOT_2,
+                        32.0/27.0, 256.0/243.0*Math.pow(2, 0.25), 4.0/3.0,
+                        1024.0/729.0, 8.0/9.0*Math.pow(8, 0.24), 128.0/81.0,
+                        1024.0/729.0*Math.pow(2, 0.25), 16.0/9.0, 128.0/81.0*Math.pow(2,  0.25)
+                    },
+                    new String[]
+                    {
+                        "0", "90", "192", //unison
+                        "294", "390", "498", //minor 3
+                        "588", "696", "792", //aug 4
+                        "888", "996", "1092" //maj 6
+                    },
+                    "Werckmeister III"),
+            new Scale("Werckmeister IV", false, new double[]
+                    {
+                        1.0, 16384.0/19683.0*Math.pow(2, 1.0/3.0), 8.0/9.0*Math.pow(2, 1.0/3.0),
+                        32.0/27.0, 64.0/81.0*Math.pow(4, 1.0/3.0), 4.0/3.0,
+                        1024.0/729.0, 32.0/27.0*Math.pow(2, 1.0/3.0), 8192.0/6561.0*Math.pow(2, 1.0/3.0),
+                        256.0/243.0*Math.pow(4, 1.0/3.0), 9.0/4.0/Math.pow(2, 1.0/3.0), 4096.0/2187.0
+                    },
+                    new String[]
+                    {
+                        "0", "82", "192", //unison
+                        "294", "392", "498", //minor 3
+                        "588", "694", "784", //aug 4
+                        "890", "1004", "1086" //maj 6
+                    },
+                    "Werckmeister IV"),
+            new Scale("Werckmeister V", false, new double[]
+                    {
+                        1.0, 8.0/9.0*Math.pow(2, 0.25), 9.0/8.0,
+                        Math.pow(2,  0.25), 8.0/9.0*ROOT_2, 9.0/8.0*Math.pow(2, 0.25),
+                        ROOT_2, 3.0/2.0, 128.0/81.0, 
+                        Math.pow(8, 0.25), 3.0/Math.pow(8, 0.25), 4.0/3.0*ROOT_2 
+                    },
+                    new String[]
+                    {
+                        "0", "96", "204", //unison
+                        "300", "396", "504", //minor 3
+                        "600", "702", "792", //aug 4
+                        "900", "1002", "1098" //maj 6
+                    },
+                    "Werckmeister V"),
+            new Scale("Werckmeister VI", false, new double[]
+                    {
+                        1.0, 98.0/93.0, 28.0/25.0,
+                        196.0/165.0, 49.0/39.0, 4.0/3.0,
+                        196.0/139.0, 169.0/131.0, 49.0/31.0,
+                        196.0/117.0, 89.0/55.0, 49.0/26.0
+                    },
+                    new String[]
+                    {
+                        "0", "91", "196", //unison
+                        "298", "395", "498", //minor 3
+                        "595", "698", "793", //aug 4
+                        "893", "1000", "1097" //maj 6
+                    },
+                    "Werckmeister VI"),
         };
     public static final int SCALE_INDEX_EQUAL = 0;
     public static final int SCALE_INDEX_JUST_PYTH_AUG = 1;
@@ -180,6 +241,10 @@ public class C
     public static final int SCALE_INDEX_JUST_5_ASYM = 5;
     public static final int SCALE_INDEX_QUARTER_MEANTONE_AUG_4 = 6;
     public static final int SCALE_INDEX_QUARTER_MEANTONE_DIM_5 = 7;
+    public static final int SCALE_INDEX_WERCKMEISTER_III = 8;
+    public static final int SCALE_INDEX_WERCKMEISTER_IV = 9;
+    public static final int SCALE_INDEX_WERCKMEISTER_V = 10;
+    public static final int SCALE_INDEX_WERCKMEISTER_VI = 11;
     
     
     public static class Scale

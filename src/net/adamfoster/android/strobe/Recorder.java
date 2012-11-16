@@ -430,18 +430,17 @@ public class Recorder
 		return mPaintBright.getColor();
 	}
 	
-	public double getTargetFreq()
+	public double getTargetFreq() // TODO: I no longer understand this function, it should be rewritten.
 	{
-		// set note4 based on A4 frequency
-		//double targetFreq = mA4Freq * Math.pow(2, (mNote-NOTE_A) / 12.0); 
-		//shift octaves
-		//return targetFreq * Math.pow(2, mOctave - 4);
-		
 	    double startNoteFreq = mA4Freq / C.SCALES[mScale].factors[(Recorder.NOTE_A-mScaleStartNote+Recorder.NOTES.length)%Recorder.NOTES.length];
         startNoteFreq *= Math.pow(2, mOctave-4); //adjust for octave : A4 is the default
         if (mScaleStartNote > Recorder.NOTE_A) //hack, but it works
         {
             startNoteFreq *= 2;
+        }
+        if (mScaleStartNote > mNote)
+        {
+            startNoteFreq /= 2;
         }
         return startNoteFreq * C.SCALES[mScale].factors[(mNote-mScaleStartNote+Recorder.NOTES.length)%Recorder.NOTES.length];
 
