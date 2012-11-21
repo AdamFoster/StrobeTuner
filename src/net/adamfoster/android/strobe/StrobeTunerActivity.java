@@ -789,7 +789,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		if (! mPlus)
 		{
 			message = message
-					+ "\n\nIf you like this app, please support me by upgrading to the plus version to remove the ads.";
+					+ "\n\nIf you like this app, please support me by upgrading to the plus version.";
 
 			builder.setNeutralButton("Buy",
 					new DialogInterface.OnClickListener()
