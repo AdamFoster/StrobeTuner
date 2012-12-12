@@ -1,5 +1,7 @@
 package net.adamfoster.android.strobe;
 
+import android.media.MediaRecorder;
+
 public class C
 {
 	public static final String PREF_A4_FREQ = "PREF_A4_FREQ";
@@ -19,6 +21,7 @@ public class C
 	public static final String PREF_COLOR = "PREF_COLOR";
 	public static final String PREF_SCALE = "PREF_SCALE";
 	public static final String PREF_SCALE_START_NOTE = "PREF_SCALE_START_NOTE";
+	public static final String PREF_MIC_INPUT = "PREF_MIC_INPUT";
     
 	public static final float DEFAULT_A4_FREQ = 440;
 	public static final float DEFAULT_A4_FREQ_MAX = 2000;
@@ -41,6 +44,9 @@ public class C
 	public static final boolean DEFAULT_SAVE_SCALE = false;
 	public static final int DEFAULT_NOTE = Recorder.NOTE_A;
 	public static final int DEFAULT_OCTAVE = 4;
+	
+	public static final int DEFAULT_MIC_INPUT = MediaRecorder.AudioSource.DEFAULT;
+    public static final int DEFAULT_MIC_INPUT_OTHER = MediaRecorder.AudioSource.VOICE_COMMUNICATION;
 	
 	public static final String SHARED_PREFERENCE_NAME = "StrobePreferences";
 	

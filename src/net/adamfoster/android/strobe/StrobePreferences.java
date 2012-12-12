@@ -36,6 +36,7 @@ public class StrobePreferences extends Activity implements OnClickListener, OnCo
 	private boolean mSaveScale;
 	private boolean mPlus;
 	private int mColor;
+	private int mMicInput;
 	
 	private DecimalFormat mDecimalFormat;
 
@@ -62,6 +63,7 @@ public class StrobePreferences extends Activity implements OnClickListener, OnCo
 			mSaveScale = extras.getBoolean(C.PREF_SAVE_SCALE, C.DEFAULT_SAVE_SCALE);
 			mPlus = extras.getBoolean(C.PREF_PLUS, false);
 			mColor = extras.getInt(C.PREF_COLOR, getResources().getColor(R.color.Bright));
+			mMicInput = extras.getInt(C.PREF_MIC_INPUT, C.DEFAULT_MIC_INPUT);
 			
 			if (! mPlus)
 	        {
@@ -73,6 +75,9 @@ public class StrobePreferences extends Activity implements OnClickListener, OnCo
                 
                 findViewById(R.id.prefSaveScaleBox).setVisibility(View.GONE);
                 findViewById(R.id.prefSaveScaleTextView).setVisibility(View.GONE);
+
+                findViewById(R.id.prefMicInputBox).setVisibility(View.GONE);
+                findViewById(R.id.prefMicInputText).setVisibility(View.GONE);
 	        }
 			
 			EditText a4View = (EditText) findViewById(R.id.prefA4value);
@@ -95,6 +100,9 @@ public class StrobePreferences extends Activity implements OnClickListener, OnCo
 			
             CheckBox saveScaleBox = (CheckBox) findViewById(R.id.prefSaveScaleBox);
             saveScaleBox.setChecked(mSaveScale);
+            
+            CheckBox micInputBox = (CheckBox) findViewById(R.id.prefMicInputBox);
+            micInputBox.setChecked(mMicInput != C.DEFAULT_MIC_INPUT);
             
 			Button colorButton = (Button) findViewById(R.id.prefColor);
 			colorButton.setBackgroundColor(mColor);
@@ -173,6 +181,13 @@ public class StrobePreferences extends Activity implements OnClickListener, OnCo
                 }
                 catch (Exception e) {}
 
+                try
+                {
+                    CheckBox micInputBox = (CheckBox) findViewById(R.id.prefMicInputBox);
+                    bundle.putInt(C.PREF_MIC_INPUT, micInputBox.isChecked() ? C.DEFAULT_MIC_INPUT_OTHER : C.DEFAULT_MIC_INPUT );
+                }
+                catch (Exception e) {}
+
                 bundle.putInt(C.PREF_COLOR, mColor);
 				
                 intent.putExtras(bundle);
@@ -206,8 +221,11 @@ public class StrobePreferences extends Activity implements OnClickListener, OnCo
 				CheckBox saveOctaveBox = (CheckBox) findViewById(R.id.prefSaveOctaveBox);
 				saveOctaveBox.setChecked(C.DEFAULT_SAVE_OCTAVE);
 				
-				CheckBox saveScaleBox = (CheckBox) findViewById(R.id.prefSaveScaleBox);
+                CheckBox saveScaleBox = (CheckBox) findViewById(R.id.prefSaveScaleBox);
                 saveScaleBox.setChecked(C.DEFAULT_SAVE_SCALE);
+                
+                CheckBox micInputBox = (CheckBox) findViewById(R.id.prefMicInputBox);
+                micInputBox.setChecked(false);
                 
                 onColorChanged(getResources().getColor(R.color.Bright));
 				
@@ -245,7 +263,10 @@ public class StrobePreferences extends Activity implements OnClickListener, OnCo
             case R.id.prefSaveScaleTextView:
                 Toast.makeText(this, "Should the current temperament and start note be saved on exit?\n(default: no)" , Toast.LENGTH_LONG).show();
                 break;
-				
+            case R.id.prefMicInputText:
+                Toast.makeText(this, "Should the headset mic be used?" , Toast.LENGTH_LONG).show();
+                break;
+            	
 			case R.id.prefColor:
 				showDialog(DIALOG_COLOR);
 				break;

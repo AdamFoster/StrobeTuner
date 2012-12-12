@@ -76,6 +76,8 @@ public class Recorder
 	private boolean mSaveNote;
 	private boolean mSaveOctave;
     private boolean mSaveScale;
+    
+    private int mMicInput;
 
 	private AudioRecord mAudio;
 	int mSamplesRead;
@@ -118,6 +120,8 @@ public class Recorder
         mCalibrationFactor = 0;
         mFlashThreshold = 500; //500 seems to be office background noise // (int) (Short.MAX_VALUE / 4); // sin(45) ~ 0.707
         mAutoDetect = false;
+        
+        mMicInput = C.DEFAULT_MIC_INPUT;
         
         mBins = new double[RINGS][];
         for (int i=0 ; i<RINGS ; i++)
@@ -190,7 +194,7 @@ public class Recorder
         Log.i(TAG, "getMinBufferSize = " + 
         		AudioRecord.getMinBufferSize(SAMPLE_FREQUENCY, 
         		AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT));
-        mAudio = new AudioRecord(MediaRecorder.AudioSource.DEFAULT, SAMPLE_FREQUENCY, 
+        mAudio = new AudioRecord(mMicInput, SAMPLE_FREQUENCY, 
         		AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, BUFFER_SIZE);
         Log.i(TAG, "Audio " + (mAudio.getState() == AudioRecord.STATE_INITIALIZED ? "initialized" : "uninitialized"));
         
@@ -419,6 +423,15 @@ public class Recorder
 		mAutoDetect = autoDetect;
 	}
 	
+    public int getMicInput()
+    {
+        return mMicInput;
+    }
+    public void setMicInput(int micInput)
+    {
+        mMicInput = micInput;
+    }
+    
 	public void setColor(int color)
 	{
 		mPaintBright.setColor(color);

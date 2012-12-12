@@ -77,7 +77,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		Log.d(TAG, "Started Strobe");
 
 		//bodgey copy protection, but whatever
-		mPlus = (getPackageManager().checkSignatures(getPackageName(), C.KEY_PACKAGE) == PackageManager.SIGNATURE_MATCH);
+		mPlus = true || (getPackageManager().checkSignatures(getPackageName(), C.KEY_PACKAGE) == PackageManager.SIGNATURE_MATCH);
 		Log.i(TAG, "Strobe unlock key " + (mPlus ? "found" : "NOT found"));
 
 		mStrobeView = (StrobeSurfaceView) findViewById(R.id.surfaceView);
@@ -105,6 +105,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
         mRecorder.setColor(settings.getInt(C.PREF_COLOR, getResources().getColor(R.color.Bright)));
         mRecorder.setScale(settings.getInt(C.PREF_SCALE, C.SCALE_INDEX_EQUAL));
         mRecorder.setStartNote(settings.getInt(C.PREF_SCALE_START_NOTE, C.DEFAULT_NOTE));
+        mRecorder.setMicInput(settings.getInt(C.PREF_MIC_INPUT, C.DEFAULT_MIC_INPUT));
 		
 		if (mRecorder.getSaveNote())
 		{
@@ -393,6 +394,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				i.putExtra(C.PREF_SAVE_NOTE, mRecorder.getSaveNote());
 				i.putExtra(C.PREF_SAVE_OCTAVE, mRecorder.getSaveOctave());
 				i.putExtra(C.PREF_SAVE_SCALE, mRecorder.getSaveScale());
+				i.putExtra(C.PREF_MIC_INPUT, mRecorder.getMicInput());
                 i.putExtra(C.PREF_COLOR, mRecorder.getColor());
 				i.putExtra(C.PREF_PLUS, mPlus);
 				startActivityForResult(i, ACTIVITY_PREF);
@@ -494,6 +496,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 					mRecorder.setSaveScale(extras.getBoolean(C.PREF_SAVE_SCALE, mRecorder.getSaveScale()));
                     mRecorder.setCalibrationFactor(extras.getInt(C.PREF_CALIBRATION_FACTOR, mRecorder.getCalibrationFactor()));
 					mRecorder.setColor(extras.getInt(C.PREF_COLOR, getResources().getColor(R.color.Bright)));
+					mRecorder.setMicInput(extras.getInt(C.PREF_MIC_INPUT, C.DEFAULT_MIC_INPUT));
 
 					//mRecorder.setOffA4();
 
@@ -507,6 +510,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 					e.putBoolean(C.PREF_SAVE_OCTAVE, mRecorder.getSaveOctave());
 					e.putBoolean(C.PREF_SAVE_SCALE, mRecorder.getSaveScale());
 					e.putInt(C.PREF_COLOR, mRecorder.getColor());
+					e.putInt(C.PREF_MIC_INPUT, mRecorder.getMicInput());
 					e.commit();
 					
 					EditText calibration = (EditText) findViewById(R.id.editCalibrate);
@@ -634,15 +638,9 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				});
 		builder.setMessage("What's New\n" +
 				"\n" +
-				"Compile target/theme for ICS.\n" +
-				"\n" +
 				"Paid Users: \n" +
-				"- Added scales/temperament option in menu. " +
-				"(NB: A440 or your A4 frequency will be constant)\n" + 
-				"\n" +
-                "Free Users: \n" +
-                "- Swipe up and down to change octave\n" +
-                "- Swipe left and right to change note\n" 
+				"- Added ability to choose headset mic in preferences\n" + 
+				"\n" 
                 );
 		return builder.create();
 	}
@@ -718,6 +716,8 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				+ "Calibrate will put the screen in calibration mode. Here you can make fine adjustments to the "
 				+ "pitch detected. Use it to calibrate the tuner to a set pitch. Press back or select calibrate again to return to normal mode.\n"
 				+ "\n"
+                + "Temperament will allow you to select a different temperament and key. Default (and the only option for free users) is equal temperament.\n"
+                + "\n"
 				+ "Buy will send you to the market to purchase the plus version. Thank you for your support.\n"
 				+ "\n"
 				+ "Settings will take you to a screen described on the next page\n";
@@ -785,7 +785,8 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				"\n" +
 				"1. Removes all ads\n\n" +
 				"2. Enables choosing of different temperaments.\n\n" +
-				"3. Change the strobe colour in the settings menu";
+				"3. Change the strobe colour in the preferences\n\n" +
+				"4. Allow selection of head set mic in preferences";
 		if (! mPlus)
 		{
 			message = message

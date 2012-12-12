@@ -44,5 +44,6 @@
     <string name="saveOctave">Save Octave</string>
     <string name="saveScale">Save Temperament</string>
     <string name="strobeColour">Strobe Colour</string>            
+    <string name="micInput">Use Headet Mic?</string>            
     
 </resources>

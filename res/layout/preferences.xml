@@ -150,11 +150,23 @@
                 android:layout_height="wrap_content" 
                 android:layout_alignTop="@id/prefSaveScaleTextView" android:layout_alignLeft="@+id/prefA4value" />
 		    
-		     <TextView android:id="@+id/prefColorTextView" 
+             <TextView android:id="@+id/prefMicInputText" 
+                android:layout_width="wrap_content" android:layout_height="wrap_content" 
+                android:text="@string/micInput" 
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/prefSaveScaleBox" android:layout_alignParentLeft="true"
+                android:onClick="onClick" android:clickable="true"/>
+            <CheckBox android:id="@+id/prefMicInputBox" 
+                android:text="" 
+                android:layout_width="wrap_content" 
+                android:layout_height="wrap_content" 
+                android:layout_alignTop="@id/prefMicInputText" android:layout_alignLeft="@+id/prefA4value" />
+            
+		    <TextView android:id="@+id/prefColorTextView" 
 		     	android:layout_width="wrap_content" android:layout_height="wrap_content" 
 		     	android:text="@string/strobeColour" 
 		     	android:layout_marginTop="20dp"
-		   	  	android:layout_below="@id/prefSaveScaleBox" android:layout_alignParentLeft="true"
+		   	  	android:layout_below="@id/prefMicInputBox" android:layout_alignParentLeft="true"
 		   	  	android:onClick="onClick" android:clickable="true"/>
 		    <Button android:id="@+id/prefColor" 
 		    	android:text="" android:onClick="onClick" 
