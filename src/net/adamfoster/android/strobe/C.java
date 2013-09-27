@@ -64,6 +64,7 @@ public class C
     private static final double COMMA_THIRD = Math.pow(COMMA, 1.0/3.0);
     private static final double COMMA_5SIXTH = Math.pow(COMMA, 5.0/6.0);
     private static final double COMMA_2THIRD = Math.pow(COMMA, 2.0/3.0);
+    private static final double COMMA_11TWELFTH = Math.pow(COMMA, 11.0/12.0);
     
     
     public static final Scale[] SCALES = 
@@ -305,6 +306,48 @@ public class C
                         "-5/6" 
                     },
                     "Young II"),
+            new Scale("Bach/Lehman", false, new double[]
+                {
+                    1.0,                                           Math.pow(3,7)/Math.pow(2,7)/16.0/COMMA_2THIRD, 
+                    Math.pow(3,2)/Math.pow(2,2)/2.0/COMMA_THIRD,    Math.pow(3,9)/Math.pow(2,9)/32.0/COMMA_5SIXTH, 
+                    Math.pow(3,4)/Math.pow(2,4)/4.0/COMMA_2THIRD, 
+                    Math.pow(3,11)/Math.pow(2,11)/64.0/COMMA_5SIXTH,      Math.pow(3,6)/Math.pow(2,6)/8.0/COMMA_2THIRD, 
+                    Math.pow(3,1)/Math.pow(2,1)/1.0/COMMA_SIXTH, Math.pow(3,8)/Math.pow(2,8)/16.0/COMMA_3QUARTER,
+                    Math.pow(3,3)/Math.pow(2,3)/2.0/COMMA_HALF,    Math.pow(3,10)/Math.pow(2,10)/32.0/COMMA_11TWELFTH, 
+                    Math.pow(3,5)/Math.pow(2,5)/4.0/COMMA_2THIRD, //7
+                },
+                new String[]
+                {
+                    "0", "-1", 
+                    "-2/6", "-1", 
+                    "-4/6", 
+                    "-1", "-1", 
+                    "-1/6", "-1", 
+                    "-3/6", "-1", 
+                    "-5/6" 
+                },
+                "Bach/Lehman"),
+            new Scale("Vallotti", false, new double[]
+                {
+                    1.0,                                           Math.pow(3,7)/Math.pow(2,7)/16.0/COMMA_5SIXTH, 
+                    Math.pow(3,2)/Math.pow(2,2)/2.0/COMMA_THIRD,    Math.pow(3,9)/Math.pow(2,9)/32.0/COMMA_5SIXTH, 
+                    Math.pow(3,4)/Math.pow(2,4)/4.0/COMMA_2THIRD, 
+                    Math.pow(3,11)/Math.pow(2,11)/64.0/COMMA_5SIXTH,      Math.pow(3,6)/Math.pow(2,6)/8.0/COMMA_5SIXTH, 
+                    Math.pow(3,1)/Math.pow(2,1)/1.0/COMMA_SIXTH, Math.pow(3,8)/Math.pow(2,8)/16.0/COMMA_5SIXTH,
+                    Math.pow(3,3)/Math.pow(2,3)/2.0/COMMA_HALF,    Math.pow(3,10)/Math.pow(2,10)/32.0/COMMA_5SIXTH, 
+                    Math.pow(3,5)/Math.pow(2,5)/4.0/COMMA_5SIXTH, //7
+                },
+                new String[]
+                {
+                    "0", "-1", 
+                    "-2/6", "-1", 
+                    "-4/6", 
+                    "-1", "-1", 
+                    "-1/6", "-1", 
+                    "-3/6", "-1", 
+                    "-5/6" 
+                },
+                "Vallotti"),
         };
     public static final int SCALE_INDEX_EQUAL = 0;
     public static final int SCALE_INDEX_JUST_PYTH_AUG = 1;
@@ -321,6 +364,8 @@ public class C
     public static final int SCALE_INDEX_WERCKMEISTER_V = 12;
     public static final int SCALE_INDEX_WERCKMEISTER_VI = 13;
     public static final int SCALE_INDEX_YOUNG_II = 14;
+    public static final int SCALE_INDEX_BACH_LEHMAN = 15;
+    public static final int SCALE_INDEX_VALLOTTI = 16;
     
     
     public static class Scale
