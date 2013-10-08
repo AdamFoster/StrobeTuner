@@ -22,6 +22,12 @@ public class C
 	public static final String PREF_SCALE = "PREF_SCALE";
 	public static final String PREF_SCALE_START_NOTE = "PREF_SCALE_START_NOTE";
 	public static final String PREF_MIC_INPUT = "PREF_MIC_INPUT";
+	public static final String PREF_KEYBOARD = "PREF_KEYBORD";
+	
+	public static final int PREF_KEYBOARD_PIANO = 0;
+	public static final int PREF_KEYBOARD_GUITAR = 1;
+	public static final int PREF_KEYBOARD_BASS_GUITAR = 2;
+  public static final String[] PREF_KEYBOARD_NAMES = {"Piano", "Guitar", "Bass Guitar"};
     
 	public static final float DEFAULT_A4_FREQ = 440;
 	public static final float DEFAULT_A4_FREQ_MAX = 2000;
@@ -44,9 +50,10 @@ public class C
 	public static final boolean DEFAULT_SAVE_SCALE = false;
 	public static final int DEFAULT_NOTE = Recorder.NOTE_A;
 	public static final int DEFAULT_OCTAVE = 4;
+	public static final int DEFAULT_GUITAR_OCTAVE = 2;
 	
 	public static final int DEFAULT_MIC_INPUT = MediaRecorder.AudioSource.DEFAULT;
-    public static final int DEFAULT_MIC_INPUT_OTHER = MediaRecorder.AudioSource.VOICE_COMMUNICATION;
+  public static final int DEFAULT_MIC_INPUT_OTHER = MediaRecorder.AudioSource.VOICE_COMMUNICATION;
 	
 	public static final String SHARED_PREFERENCE_NAME = "StrobePreferences";
 	

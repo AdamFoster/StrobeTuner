@@ -51,7 +51,45 @@
 				android:layout_width="33dp" android:layout_height="wrap_content" />
 	</LinearLayout>
 	
-	<TextView android:id="@+id/textCalibrate" 
+	<LinearLayout 
+			android:id="@+id/layoutGuitar"
+			android:layout_height="wrap_content" android:orientation="horizontal"
+			android:layout_width="fill_parent" android:gravity="center_horizontal"
+			android:background="@color/Black"> 
+		<Button android:id="@+id/buttonGuitarE" android:text="@string/e" android:onClick="onClick" 
+				android:layout_width="40dp" android:layout_height="wrap_content" />
+		<Button android:id="@+id/buttonGuitarA" android:text="@string/a" android:onClick="onClick" 
+				android:layout_width="40dp" android:layout_height="wrap_content" />
+		<Button android:id="@+id/buttonGuitarD" android:text="@string/d" android:onClick="onClick" 
+				android:layout_width="40dp" android:layout_height="wrap_content" />
+		<Button android:id="@+id/buttonGuitarG" android:text="@string/g" android:onClick="onClick" 
+				android:layout_width="40dp" android:layout_height="wrap_content" />
+		<Button android:id="@+id/buttonGuitarB" android:text="@string/b" android:onClick="onClick" 
+				android:layout_width="40dp" android:layout_height="wrap_content" />
+		<Button android:id="@+id/buttonGuitarE2" android:text="@string/e" android:onClick="onClick" 
+				android:layout_width="40dp" android:layout_height="wrap_content" />
+	</LinearLayout>
+	
+	<LinearLayout 
+			android:id="@+id/layoutBassGuitar"
+			android:layout_height="wrap_content" android:orientation="horizontal"
+			android:layout_width="fill_parent" android:gravity="center_horizontal"
+			android:background="@color/Black"> 
+		<Button android:id="@+id/buttonBassGuitarB0" android:text="@string/b" android:onClick="onClick" 
+				android:layout_width="40dp" android:layout_height="wrap_content" />
+		<Button android:id="@+id/buttonBassGuitarE1" android:text="@string/e" android:onClick="onClick" 
+				android:layout_width="40dp" android:layout_height="wrap_content" />
+		<Button android:id="@+id/buttonBassGuitarA1" android:text="@string/a" android:onClick="onClick" 
+				android:layout_width="40dp" android:layout_height="wrap_content" />
+		<Button android:id="@+id/buttonBassGuitarD2" android:text="@string/d" android:onClick="onClick" 
+				android:layout_width="40dp" android:layout_height="wrap_content" />
+		<Button android:id="@+id/buttonBassGuitarG2" android:text="@string/g" android:onClick="onClick" 
+				android:layout_width="40dp" android:layout_height="wrap_content" />
+		<Button android:id="@+id/buttonBassGuitarC3" android:text="@string/c" android:onClick="onClick" 
+				android:layout_width="40dp" android:layout_height="wrap_content" />
+	</LinearLayout>
+	
+		<TextView android:id="@+id/textCalibrate" 
 			android:layout_height="wrap_content" 
 			android:layout_width="fill_parent" android:gravity="center_horizontal" 
 			android:text="@string/calibrationFactor"

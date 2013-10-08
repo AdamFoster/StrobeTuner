@@ -27,6 +27,7 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -45,15 +46,24 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 	private Recorder mRecorder;
 	private StrobeSurfaceView mStrobeView;
 	private int mNote;
+	private int mKeyboard;
 	private boolean mPlus;
 	private GestureDetector mGestureDetector;
-
+	
+	private LinearLayout mNaturalsLayout;
+	private LinearLayout mSharpsLayout;
+	private LinearLayout mGuitarLayout;
+	private LinearLayout mBassGuitarLayout;
+	private LinearLayout mCalibrationLayout;
+	private TextView mCalibrateText;
+	
 	private static final int MENU_SETTINGS = 3;
 	private static final int MENU_HELP = 4;
 	private static final int MENU_BUY = 5;
 	private static final int MENU_CALIBRATE = 7;
 	private static final int MENU_SCALE = 8;
-
+	private static final int MENU_KEYBOARD = 9;
+	
 	private static final int DIALOG_HELP = 0;
 	private static final int DIALOG_MORE_HELP = 1;
 	private static final int DIALOG_SETTINGS_HELP = 2;
@@ -62,6 +72,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 	private static final int DIALOG_SCALE = 5;
 	private static final int DIALOG_NOTE = 6;
 	private static final int DIALOG_PLUS_ONLY = 7;
+	private static final int DIALOG_KEYBOARD = 8;
 
 	private static final int ACTIVITY_PREF = 0;
 	
@@ -88,9 +99,18 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		mNote = R.id.buttonA;
 		
 		// hide calibration
-		LinearLayout calibrationLayout = (LinearLayout) findViewById(R.id.layoutCalibrate);
-		calibrationLayout.setVisibility(View.GONE);
-		findViewById(R.id.textCalibrate).setVisibility(View.GONE);
+		mCalibrationLayout = (LinearLayout) findViewById(R.id.layoutCalibrate);
+		mCalibrationLayout.setVisibility(View.GONE);
+		mCalibrateText = (TextView) findViewById(R.id.textCalibrate);
+		mCalibrateText.setVisibility(View.GONE);
+
+		//hide guitar
+		mSharpsLayout = (LinearLayout) findViewById(R.id.layoutSharps);
+		mNaturalsLayout = (LinearLayout) findViewById(R.id.layoutNaturals);
+    mGuitarLayout = (LinearLayout) findViewById(R.id.layoutGuitar);
+		mGuitarLayout.setVisibility(View.GONE);
+		mBassGuitarLayout = (LinearLayout) findViewById(R.id.layoutBassGuitar);
+    mBassGuitarLayout.setVisibility(View.GONE);
 
 		// preferences
 		SharedPreferences settings = getSharedPreferences(
@@ -106,6 +126,9 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
         mRecorder.setScale(settings.getInt(C.PREF_SCALE, C.SCALE_INDEX_EQUAL));
         mRecorder.setStartNote(settings.getInt(C.PREF_SCALE_START_NOTE, C.DEFAULT_NOTE));
         mRecorder.setMicInput(settings.getInt(C.PREF_MIC_INPUT, C.DEFAULT_MIC_INPUT));
+        
+    mKeyboard = settings.getInt(C.PREF_KEYBOARD, C.PREF_KEYBOARD_PIANO);
+    displayKeyboard();
 		
 		if (mRecorder.getSaveNote())
 		{
@@ -183,18 +206,24 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		switch (mNote)
 		{
 			case R.id.buttonC:
+			case R.id.buttonBassGuitarC3:
 				mRecorder.setNote(Recorder.NOTE_C);
 				break;
 			case R.id.buttonCS:
 				mRecorder.setNote(Recorder.NOTE_C_SHARP);
 				break;
 			case R.id.buttonD:
+      case R.id.buttonGuitarD:
+      case R.id.buttonBassGuitarD2:
 				mRecorder.setNote(Recorder.NOTE_D);
 				break;
 			case R.id.buttonDS:
 				mRecorder.setNote(Recorder.NOTE_D_SHARP);
 				break;
 			case R.id.buttonE:
+      case R.id.buttonGuitarE:
+      case R.id.buttonGuitarE2:
+      case R.id.buttonBassGuitarE1:
 				mRecorder.setNote(Recorder.NOTE_E);
 				break;
 			case R.id.buttonF:
@@ -204,18 +233,24 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				mRecorder.setNote(Recorder.NOTE_F_SHARP);
 				break;
 			case R.id.buttonG:
-				mRecorder.setNote(Recorder.NOTE_G);
+      case R.id.buttonGuitarG:
+      case R.id.buttonBassGuitarG2:
+        mRecorder.setNote(Recorder.NOTE_G);
 				break;
 			case R.id.buttonGS:
 				mRecorder.setNote(Recorder.NOTE_G_SHARP);
 				break;
 			case R.id.buttonA:
+      case R.id.buttonGuitarA:
+      case R.id.buttonBassGuitarA1:
 				mRecorder.setNote(Recorder.NOTE_A);
 				break;
 			case R.id.buttonAS:
 				mRecorder.setNote(Recorder.NOTE_A_SHARP);
 				break;
 			case R.id.buttonB:
+      case R.id.buttonGuitarB:
+      case R.id.buttonBassGuitarB0:
 				mRecorder.setNote(Recorder.NOTE_B);
 				break;
 
@@ -251,7 +286,49 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				mNote = v.getId();
 				noteUpdated();
 				break;
+			
+      case R.id.buttonGuitarE:
+      case R.id.buttonGuitarA:
+        mNote = v.getId();
+        mRecorder.setOctave(C.DEFAULT_GUITAR_OCTAVE);
+        noteUpdated();
+        break;
+      case R.id.buttonGuitarD:
+      case R.id.buttonGuitarG:
+      case R.id.buttonGuitarB:
+        mNote = v.getId();
+        mRecorder.setOctave(C.DEFAULT_GUITAR_OCTAVE+1);
+        noteUpdated();
+        break;
+      case R.id.buttonGuitarE2:
+        mNote = v.getId();
+        mRecorder.setOctave(C.DEFAULT_GUITAR_OCTAVE+2);
+        noteUpdated();
+        break;
 				
+      case R.id.buttonBassGuitarB0:
+        mNote = v.getId();
+        mRecorder.setOctave(0);
+        noteUpdated();
+        break;
+      case R.id.buttonBassGuitarE1:
+      case R.id.buttonBassGuitarA1:
+        mNote = v.getId();
+        mRecorder.setOctave(1);
+        noteUpdated();
+        break;
+      case R.id.buttonBassGuitarD2:
+      case R.id.buttonBassGuitarG2:
+        mNote = v.getId();
+        mRecorder.setOctave(2);
+        noteUpdated();
+        break;
+      case R.id.buttonBassGuitarC3:
+        mNote = v.getId();
+        mRecorder.setOctave(3);
+        noteUpdated();
+        break;
+        
 			case R.id.buttonCalibrateDownBig:
 				adjustCalibration(-10);
 				break;
@@ -268,13 +345,12 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 			case R.id.buttonAuto:
 				mRecorder.setAutoDetect(true);
 				break;
-				
-            case R.id.button8va:
-                mRecorder.upOctave();
-                break;
-            case R.id.button8vb:
-                mRecorder.downOctave();
-                break;
+      case R.id.button8va:
+        mRecorder.upOctave();
+        break;
+      case R.id.button8vb:
+        mRecorder.downOctave();
+        break;
 				
 			default:
 				Log.e(TAG, "Unrecognised click");
@@ -285,7 +361,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 	public void onBackPressed()
 	{
 		//super.onBackPressed();
-		if (findViewById(R.id.layoutCalibrate).getVisibility() == View.GONE)
+		if (mCalibrationLayout.getVisibility() == View.GONE)
 		{
 			finish();
 		}
@@ -316,6 +392,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		    e.putInt(C.PREF_SCALE_START_NOTE, mRecorder.getScaleStartNote());
 		}
 		e.putInt(C.PREF_CALIBRATION_FACTOR, mRecorder.getCalibrationFactor());
+		e.putInt(C.PREF_KEYBOARD, mKeyboard);
 		e.putBoolean(C.PREF_FIRST_RUN, false);
 		
 		try 
@@ -342,7 +419,8 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		super.onCreateOptionsMenu(menu);
 
 		menu.add(0, MENU_SCALE, 0, R.string.menu_scale);
-        menu.add(0, MENU_CALIBRATE, 0, R.string.menu_calibrate);
+		menu.add(0, MENU_KEYBOARD, 0, R.string.menu_keyboard);
+    menu.add(0, MENU_CALIBRATE, 0, R.string.menu_calibrate);
 		menu.add(0, MENU_SETTINGS, 0, R.string.menu_settings);
 		menu.add(0, MENU_HELP, 0, R.string.menu_help);
         
@@ -364,7 +442,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 		
 		//switch calibration menu item as required
 		MenuItem mi = menu.findItem(MENU_CALIBRATE);
-		if (findViewById(R.id.layoutCalibrate).getVisibility() == View.GONE)
+		if (mCalibrationLayout.getVisibility() == View.GONE)
 		{
 			mi.setTitle(R.string.menu_calibrate);
 		}
@@ -395,7 +473,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				i.putExtra(C.PREF_SAVE_OCTAVE, mRecorder.getSaveOctave());
 				i.putExtra(C.PREF_SAVE_SCALE, mRecorder.getSaveScale());
 				i.putExtra(C.PREF_MIC_INPUT, mRecorder.getMicInput());
-                i.putExtra(C.PREF_COLOR, mRecorder.getColor());
+        i.putExtra(C.PREF_COLOR, mRecorder.getColor());
 				i.putExtra(C.PREF_PLUS, mPlus);
 				startActivityForResult(i, ACTIVITY_PREF);
 				return true;
@@ -416,8 +494,7 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				return true;
 				
 			case MENU_CALIBRATE:
-				LinearLayout calibrationLayout = (LinearLayout) findViewById(R.id.layoutCalibrate);
-				if (calibrationLayout.getVisibility() == View.GONE)
+				if (mCalibrationLayout.getVisibility() == View.GONE)
 				{
 					startCalibration();
 				}
@@ -428,8 +505,11 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				
 				return true;
 			case MENU_SCALE:
-			    showDialog(DIALOG_SCALE);
-			    return true;
+			  showDialog(DIALOG_SCALE);
+			  return true;
+			case MENU_KEYBOARD:
+			  showDialog(DIALOG_KEYBOARD);
+			  return true;
 		}
 
 		return false;
@@ -459,13 +539,16 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 			case DIALOG_SCALE:
 			    dialog = createScaleDialog();
 			    break;
-            case DIALOG_NOTE:
-                dialog = createNoteDialog();
-                break;
-            case DIALOG_PLUS_ONLY:
-                dialog = createPlusDialog();
-                break;
-            default:
+      case DIALOG_NOTE:
+          dialog = createNoteDialog();
+          break;
+      case DIALOG_PLUS_ONLY:
+          dialog = createPlusDialog();
+          break;
+      case DIALOG_KEYBOARD:
+        dialog = createKeyboardDialog();
+        break;
+      default:
 				dialog = null;
 		}
 		return dialog;
@@ -521,6 +604,23 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				break;
 		}
 	}
+	
+	private Dialog createKeyboardDialog()
+	{
+	  AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setTitle("Keyboard to display");
+    builder.setSingleChoiceItems(C.PREF_KEYBOARD_NAMES, mKeyboard, new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int which) {
+        StrobeTunerActivity.this.mKeyboard = which;
+        StrobeTunerActivity.this.displayKeyboard();
+        dialog.dismiss();
+      }
+    });
+    
+    AlertDialog alert = builder.create();
+    return alert;
+	}
+	
 	
 	   /**
      * Used for creating the scale selection dialog. 
@@ -638,9 +738,9 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 				});
 		builder.setMessage("What's New\n" +
 				"\n" +
-				"Paid Users: \n" +
-				"- Added ability to choose headset mic in preferences\n" + 
-				"\n" 
+				"Added Bach/Lehman and Vallotti temperaments (plus only)\n" + 
+				"Added guitar and bass display\n" + 
+        "\n" 
                 );
 		return builder.create();
 	}
@@ -843,21 +943,51 @@ public class StrobeTunerActivity extends Activity implements OnClickListener, Te
 	{
 		// switch to calibration mode
 		// hide sharps & naturals
-		findViewById(R.id.layoutSharps).setVisibility(View.GONE);
-		findViewById(R.id.layoutNaturals).setVisibility(View.GONE);
+	  hideKeyboard();
 		// show calibration
-		findViewById(R.id.layoutCalibrate).setVisibility(View.VISIBLE);
-		findViewById(R.id.textCalibrate).setVisibility(View.VISIBLE);
+		mCalibrationLayout.setVisibility(View.VISIBLE);
+		mCalibrateText.setVisibility(View.VISIBLE);
 	}
 	private void stopCalibration()
 	{
 		// switch to normal mode
 		// hide calibration
-		findViewById(R.id.layoutCalibrate).setVisibility(View.GONE);
-		findViewById(R.id.textCalibrate).setVisibility(View.GONE);
-		// show sharps & naturals
-		findViewById(R.id.layoutSharps).setVisibility(View.VISIBLE);
-		findViewById(R.id.layoutNaturals).setVisibility(View.VISIBLE);
+	  mCalibrationLayout.setVisibility(View.GONE);
+	  mCalibrateText.setVisibility(View.GONE);
+	  displayKeyboard();
+	}
+	
+	private void hideKeyboard()
+	{
+	  mSharpsLayout.setVisibility(View.GONE);
+    mNaturalsLayout.setVisibility(View.GONE);
+    mGuitarLayout.setVisibility(View.GONE);
+    mBassGuitarLayout.setVisibility(View.GONE);
+	}
+	private void displayKeyboard()
+	{
+	  switch (mKeyboard)
+	  {
+	  case C.PREF_KEYBOARD_GUITAR:
+	    mSharpsLayout.setVisibility(View.GONE);
+	    mNaturalsLayout.setVisibility(View.GONE);
+	    mGuitarLayout.setVisibility(View.VISIBLE);
+	    mBassGuitarLayout.setVisibility(View.GONE);
+      break;
+	  case C.PREF_KEYBOARD_BASS_GUITAR:
+      mSharpsLayout.setVisibility(View.GONE);
+      mNaturalsLayout.setVisibility(View.GONE);
+      mGuitarLayout.setVisibility(View.GONE);
+      mBassGuitarLayout.setVisibility(View.VISIBLE);
+      break;
+    case C.PREF_KEYBOARD_PIANO:
+	  default:
+      mSharpsLayout.setVisibility(View.VISIBLE);
+      mNaturalsLayout.setVisibility(View.VISIBLE);
+      mGuitarLayout.setVisibility(View.GONE);
+      mBassGuitarLayout.setVisibility(View.GONE);
+      break;
+	  }
 	}
 	
 	class MyGestureDetector extends SimpleOnGestureListener
